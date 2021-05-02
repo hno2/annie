@@ -1,0 +1,87 @@
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <title>Emlie - Automatic Code Assesment</title>
+</head>
+{% extends "_base.html" %}
+{% block content %}
+<main class="mt-5">
+  <div class="container">
+    <section id="welcome">
+    </section>
+    <section id="evaluation">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="code">
+            {{code|safe}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          Comments
+        </div>
+      </div>
+
+    </section>
+    <!-- Tabs navs -->
+    <div class="card text-center">
+      <div class="card-header">
+
+        <ul class="nav nav-tabs card-header-tabs" id="grades" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="grades-ai" data-mdb-toggle="tab" href="#grades-tabs-1" role="tab"
+              aria-controls="grades-tabs-1" aria-selected="true">AI Evaluvation</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="grades-style" data-mdb-toggle="tab" href="#grades-tabs-2" role="tab"
+              aria-controls="grades-tabs-2" aria-selected="false">Style</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="grades-reviewer" data-mdb-toggle="tab" href="#grades-tabs-3" role="tab"
+              aria-controls="grades-tabs-3" aria-selected="false">Reviewer</a>
+          </li>
+        </ul>
+      </div>
+      <!-- Tabs content -->
+
+      <div class="card-body">
+        <div class="tab-content" id="grades-content">
+          <div class="tab-pane fade show active" id="grades-tabs-1" role="tabpanel" aria-labelledby="grades-ai">
+            <ul>
+              <li>Follow a process<span class="fa fa-star checked"></span>
+                <span class="fas fa-star checked"></span>
+                <span class="fas fa-star checked"></span>
+                <span class="fas fa-star"></span>
+                <span class="fas fa-star"></span></li>
+              <li>Common Errors
+                <span class="fas fa-star"></span>
+                <span class="fas fa-star"></span>
+                <span class="fas fa-star"></span>
+                <span class="fas fa-star"></span>
+                <span class="fa fa-star"></span></li>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-pane fade" id="grades-tabs-2" role="tabpanel" aria-labelledby="grades-style">
+            <h4>Notes on your style</h4>
+            Grade: (Stars)
+            Please check out these suggestions to make your code more readable. Please note that they do'nt
+          </div>
+          <div class="tab-pane fade" id="grades-tabs-3" role="tabpanel" aria-labelledby="grades-reviewer">
+            Unfortunatly no reviewer has yet looked at your assignment. Check out the comments made by our AI Evaluation
+            system.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    </section>
+  </div>
+</main>
+{% endblock  %}

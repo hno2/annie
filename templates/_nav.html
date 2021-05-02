@@ -1,0 +1,26 @@
+{% set navigation_bar = [
+    ('/', 'index', 'Home'),
+] -%}
+{% set active_page = active_page|default('index') -%}
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light white">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">EMLIE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% for href, id, caption in navigation_bar %}
+                <li class="nav-item {% if id == active_page %}active{% endif
+                %}">
+                    <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</nav>
