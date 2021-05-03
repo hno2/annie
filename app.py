@@ -12,7 +12,7 @@ def home(nb=False):
         code = hightlightcode(file.read())
     if nb:
         code = convertnb("test.ipynb")
-    return render_template("evaluation.html", code=code)
+    return render_template("evaluation.html", code=code, hash=app.config["HASH"])
 
 
 @app.route("/upload")
