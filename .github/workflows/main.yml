@@ -28,4 +28,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: hno2/annie:latest
+          tags: ghcr.io/hno2/annie:latest
