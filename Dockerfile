@@ -1,7 +1,6 @@
 FROM debian:buster-slim
 ARG GIT_COMMIT
 ENV GIT_COMMIT=$GIT_COMMIT
-RUN echo"${GIT_COMMIT}"
 RUN apt-get update && apt-get install -y \
     git \
     python3 \
