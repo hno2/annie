@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  docker:
+  Build-Docker:
     runs-on: ubuntu-latest
     steps:
       -
@@ -29,3 +29,5 @@ jobs:
         with:
           push: true
           tags: ghcr.io/hno2/annie:latest
+          build-args:
+            GIT_COMMIT=$(git rev-parse --short HEAD)
