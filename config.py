@@ -1,8 +1,8 @@
-import subprocess
+import os
 
-process = subprocess.Popen(
-    ["git", "rev-parse", "--short", "HEAD"], shell=False, stdout=subprocess.PIPE
-)
-HASH = process.communicate()[0].strip().decode()
+try:
+    HASH = os.environ["GIT_COMMIT"]
+except:
+    HASH = "not available"
 
 DEBUG = True
