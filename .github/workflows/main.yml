@@ -30,4 +30,4 @@ jobs:
           push: true
           tags: ghcr.io/hno2/annie:latest
           build-args:
-            GIT_COMMIT=$(git rev-parse --short HEAD)
+            GIT_COMMIT=${GITHUB_SHA::6}
