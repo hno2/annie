@@ -27,7 +27,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          envs: GITHUB_SHA
           push: true
           tags: ghcr.io/hno2/annie:latest
           build-args:
-            GIT_COMMIT=${{GITHUB_SHA::6}}
+            GIT_COMMIT=${GITHUB_SHA::8}
