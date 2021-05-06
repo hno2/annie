@@ -5,8 +5,8 @@
 
 
 
-<div id="sidenav" class="sidenav bg-light sidenav-dark" data-color="dark" data-mdb-content="#content"
-    style="width:220px" data-hidden="true">
+<div id="sidenav" class="sidenav sidenav-dark" data-color="dark" data-mdb-content="#content" style="width:220px"
+    data-hidden="true">
     <div class="mt-4">
         <div id="header-content" class="pl-3">
             <img src="{{user.img}}" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;">
@@ -23,7 +23,7 @@
             {% for task in user.tasks%}
             <li class="sidenav-item">
                 <a class="sidenav-link ripple-surface" href="/" tabindex="1">
-                    <i class="fas {{"fa-check" if task==1}}{{"fa-times" if task==0}} pr-3"></i>Task
+                    <i class="fas {{"fa-check" if task==1}}{{"fa-times" if task==0}} fa-fw pr-3"></i>Task
                     {{loop.index}}</a>
             </li>
             {%endfor%}
