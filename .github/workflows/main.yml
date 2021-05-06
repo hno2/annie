@@ -31,4 +31,4 @@ jobs:
           push: true
           tags: ghcr.io/hno2/annie:latest
           build-args:
-            GIT_COMMIT=${GITHUB_SHA::8}
+            GIT_COMMIT=${{github.sha}}
