@@ -17,31 +17,38 @@
     <!-- Code Hightlighting -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/friendly.css') }}">
     <!-- Your custom styles (optional) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     {%block custom_style%}{%endblock%}
 </head>
 
 <body>
-    <header>
+    <div id="content">
+        <header>
 
-        {% include '_nav.html' %}
-
-
-    </header>
-    {% block content %}
-    {% endblock %}
-    <footer>
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-            Hash: <a href="https://github.com/hno2/annie/commit/{{hash}}">{{hash}}</a>
-        </div>
-    </footer>
+            {% include '_nav.html' %}
 
 
+        </header>
+        {% block content %}
+        {% endblock %}
+        <button data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1" class="btn btn-primary ripple-surface"
+            aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-bars"></i>
+        </button>
+        <footer>
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+                Hash: <a href="https://github.com/hno2/annie/commit/{{hash}}">{{hash}}</a>
+            </div>
+        </footer>
 
+
+    </div>
     <!-- jQuery -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
-
+    <!-- Custom -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/nav.js') }}"></script>
     {% block custom_js %}{%endblock%}
 </body>
 

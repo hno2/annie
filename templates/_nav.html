@@ -5,22 +5,60 @@
 
 
 
+<div id="sidenav" class="sidenav bg-light sidenav-dark" data-color="dark" data-mdb-content="#content"
+    style="width:220px" data-hidden="true">
+    <div class="mt-4">
+        <div id="header-content" class="pl-3">
+            <img src="{{user.img}}" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;">
 
-<nav class="navbar navbar-expand-lg navbar-light white">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Annie</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                {% for href, id, caption in navigation_bar %}
-                <li class="nav-item {% if id == active_page %}active{% endif
-                %}">
-                    <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a></li>
-                {% endfor %}
-            </ul>
+            <h4>
+                <span style="white-space: nowrap;">{{user.name}}</span>
+            </h4>
+            <p>{{user.mail}}</p>
+        </div>
+        <hr class="mb-0">
+    </div>
+    <div id="scrollContainer" class="ps ps--active-y" style="max-height: calc(100% - 243px); position: relative;">
+        <ul class="sidenav-menu">
+            {% for task in user.tasks%}
+            <li class="sidenav-item">
+                <a class="sidenav-link ripple-surface" href="/" tabindex="1">
+                    <i class="fas {{"fa-check" if task==1}}{{"fa-times" if task==0}} pr-3"></i>Task
+                    {{loop.index}}</a>
+            </li>
+            {%endfor%}
+        </ul>
+        <hr class="m-0">
+        <ul class="sidenav-menu">
+            <li class="sidenav-item">
+                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-cogs pr-3"></i>Settings</a>
+            </li>
+            <li class="sidenav-item">
+                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-user pr-3"></i>Profile</a>
+            </li>
+            <li class="sidenav-item">
+                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-shield-alt pr-3"></i>Privacy</a>
+            </li>
+            <li class="sidenav-item">
+                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-user-astronaut pr-3"></i>Log
+                    out</a>
+            </li>
+        </ul>
+        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+        </div>
+        <div class="ps__rail-y" style="top: 0px; height: 372px; right: 0px;">
+            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 159px;"></div>
         </div>
     </div>
+</div>
+
+<nav class="navbar navbar-light bg-light">
+    <form class="container-fluid justify-content-start">
+
+        <button class="navbar-toggler" type="button" id=sidenav-toggle aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="/">Annie</a>
+    </form>
 </nav>
