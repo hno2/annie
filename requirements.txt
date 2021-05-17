@@ -3,3 +3,4 @@ pygments
 nbconvert
 gunicorn
 pylint>=2
+oauth2
