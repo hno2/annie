@@ -38,7 +38,7 @@ def error(exception):
     return "str(exception)"
 
 
-@app.route("/launch")
+@app.route("/launch", methods=["GET", "POST"])
 @lti(error=error, request="any", app=app)
 def launch(lti):
     return str(lti)
