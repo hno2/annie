@@ -2,6 +2,7 @@
 from flask import Flask, render_template
 from helpers import convertnb, hightlightcode
 from steve import static_code_check
+from pylti.flask import lti
 
 app = Flask(__name__)
 app.config.from_pyfile("config.py")
@@ -20,6 +21,27 @@ mock_file = {
     "html": hightlightcode(code),
     "static": {"score": score, "msgs": msgs},
 }
+
+
+def error(exception):
+    """
+    Error receives one argument - exception
+    exception is a dictionary with the following keys:
+        exception['exception'] = lti_exception
+        exception['kwargs'] = kwargs - keyword arguments passed to the route
+        exception['args'] = args - positional arguments passed to teh route
+
+    :param: exception: `exception` object
+    :return: string "HTML in case of exception"
+    """
+    print(exception)
+    return "str(exception)"
+
+
+@app.route("/launch")
+@lti(error=error, request="any", app=app)
+def launch(lti):
+    return str(lti)
 
 
 @app.route("/")
