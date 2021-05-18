@@ -45,14 +45,9 @@ def launch(lti):
 
 
 @app.route("/")
-def home(nb=False):
-    with open("test.py", "r") as file:
-        code = hightlightcode(file.read())
-    if nb:
-        code = convertnb("test.ipynb")
+def home():
     return render_template(
         "evaluation.html",
-        code=code,
         hash=app.config["HASH"],
         user=mock_user,
         file=mock_file,
