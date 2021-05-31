@@ -16,3 +16,17 @@ $("#sidenav-toggle").on("click", function () {
         openNav()
     }
 })
+
+function align_comments() {
+    /*For every pre (TODO:check is not empty*/
+    $(".CodeMirror").each(function (index) {
+        block = $(this)
+        $("#block-" + index).css({
+            position: "absolute",
+            top: block.position().top
+        })
+    });
+}
+$(document).ready(
+    align_comments()
+)

@@ -1,6 +1,5 @@
 # app.py
-from flask import Flask, render_template
-from helpers import convertnb, hightlightcode
+from helpers import convertnb, hightlightcode, get_preds
 from steve import static_code_check
 from pylti.flask import lti
 
@@ -13,14 +12,15 @@ mock_user = {
     "tasks": [1, 0, 1, 1, 0, 1, 2],  # 1 sucess, 2 Progress, 0 unseccessfull
 }
 # Data Structure for Files, will be transferred to DB Class soon
-with open("test.py", "r") as file:
-    code = file.read()
-score, msgs = static_code_check("test.py")
-mock_file = {
-    "code": code,
-    "html": hightlightcode(code),
-    "static": {"score": score, "msgs": msgs},
-}
+with open("test.ipynb", "r") as file:
+    content = file.read()
+    score, msgs = 50, ["no_message"]  # static_code_check("test.py")
+    html = convertnb(content)
+    mock_file = {
+        "html": html,
+        "static": {"score": score, "msgs": msgs},
+        "process": get_preds(content),
+    }
 
 
 def error(exception):

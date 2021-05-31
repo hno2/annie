@@ -13,14 +13,27 @@
             {{file.html|safe}}
           </div>
         </div>
-        <div class="col-md-4">
-          Comments
+        <div class="col-md-3">
+          {%set index_labels=["Algorithm_Selection","Conclusio","Data_Adaption","Data_Understanding","Hyperparameter_Adjustment","None"]%}
+          {%for labels in file.process%}
+          <div class="process-step" id="block-{{loop.index0}}">
+            <div class="card">
+              <div class="card-body">
+                {%for label in labels[0][0]%}
+                {%set conf=labels[2][0][index_labels.index(label)]|float|round(2)%}
+                <p class="card-text">{{label}} - <span
+                    class="badge {{'bg-success' if conf > 0.5 else 'bg-warning text-dark'}}">{{conf}}
+                  </span></p> {%endfor%}
+              </div>
+            </div>
+          </div>
+          {%endfor %}
         </div>
       </div>
 
     </section>
     <!-- Tabs navs -->
-    <div class="card text-center">
+    <div class=" card text-center">
       <div class="card-header">
 
         <ul class="nav nav-tabs card-header-tabs" id="grades" role="tablist">
@@ -54,7 +67,8 @@
             <div class="row">
               <h4>Notes on your style</h4>
               {{stars(file.static.score)}}
-              Here we want to provide you some tips to make your code more readable, they are powered by PyLint, you can
+              Here we want to provide you some tips to make your code more readable, they are powered by PyLint,
+              you can
               find more information with the codes listed here.
               <div class="col-md-6">
                 <ul class="list-group text-left">
@@ -66,7 +80,8 @@
             </div>
           </div>
           <div class="tab-pane fade" id="grades-tabs-3" role="tabpanel" aria-labelledby="grades-reviewer">
-            Unfortunatly no reviewer has yet looked at your assignment. Check out the comments made by our AI Evaluation
+            Unfortunatly no reviewer has yet looked at your assignment. Check out the comments made by our AI
+            Evaluation
             system.
           </div>
         </div>
