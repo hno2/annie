@@ -1,5 +1,6 @@
 import io, sys
-from nbconvert.nbconvertapp import main
+import nbformat
+from nbconvert import HTMLExporter
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
@@ -9,22 +10,16 @@ def convertnb(file: str) -> str:
     """Converts a JupyterNotebook to html, by using nbconvert
 
     Args:
-        file (str): Filepath to the
+        file (str): File contents
 
     Returns:
         str: The HTML corresponding with the .ipynb file
     """
-    argv = ["--template=basic", "--stdout", file]
-
-    capture = io.StringIO()
-    sys.stdout = capture  # redirect stdout
-
-    main(argv)
-
-    sys.stdout = sys.__stdout__  # send stdout to normal place again
-    out = capture.getvalue()
-    print(out)
-    return out
+    nb = nbformat.reads(file, as_version=4)
+    html_exporter = HTMLExporter()
+    html_exporter.template_name = "classic"
+    (body, _) = html_exporter.from_notebook_node(nb)
+    return body
 
 
 def hightlightcode(text: str) -> str:
