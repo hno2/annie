@@ -1,0 +1,68 @@
+{% extends "_base.html" %}
+{%block custom_style%}
+{{ dropzone.load_css() }}
+<style>
+    .dropzone {
+        border: 2px dashed #1266f1;
+        min-height: 200px;
+    }
+</style>
+{%endblock custom_style%}
+
+{% block content %}
+
+<ul class="stepper stepper-vertical" id="stepper-submit" data-mdb-stepper-linear="true"
+    data-mdb-stepper-type="vertical">
+    <li class="stepper-step stepper-active" id="upload">
+        <div class="stepper-head" tabindex="0">
+            <span class="stepper-head-icon">1 </span>
+            <span class="stepper-head-text"> Upload Files </span>
+        </div>
+        <div class="stepper-content py-3">
+            {{ dropzone.create(action='user.upload') }}
+        </div>
+    </li>
+    <!-- First step -->
+
+    <!-- Second step -->
+    <li class="stepper-step" id="description">
+        <div class="stepper-head">
+            <span class="stepper-head-icon"> 2 </span>
+            <span class="stepper-head-text"> Describe your UseCase </span>
+        </div>
+        <div class="stepper-content py-3">
+            Specify the problem you are solving here. Think about specific and attainable goals.
+            <div class="form-outline mb-4">
+                <textarea id="question" class="form-control" rows="4"></textarea>
+                <label class="form-label" for="question">Question</label>
+            </div>
+
+            <div class="form-check d-flex justify-content-center mb-4">
+                <input class="form-check-input me-2" type="checkbox" value="" id="video" />
+                <label class="form-check-label" for="video">
+                    I want to upload a video instead.
+                </label>
+            </div>
+            Or Upload Video
+    </li>
+    <!-- Second step -->
+
+    <!-- Third step -->
+    <li class="stepper-step">
+        <div class="stepper-head">
+            <span class="stepper-head-icon">2 </span>
+            <span class="stepper-head-text"> Peer Review </span>
+        </div>
+        <div class="stepper-content py-3">
+            Check out these tags to match you with a peer reviewer.
+            Once you have reviewed two other students code.
+        </div>
+    </li>
+</ul>
+
+{%endblock content%}
+
+{% block custom_js %}
+{{ dropzone.load_js() }}
+{{ dropzone.config(custom_options="success: function(file, response){console.log(response);}") }}
+{%endblock%}

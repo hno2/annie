@@ -1,0 +1,7 @@
+{% block content %}
+{{repr(lti)}}
+
+<form action="{{ url_for('grade') }}" method="post" name="login">
+    <a href="{{ url_for('home') }}">New Problem</a>
+</form>
+{%endblock%}

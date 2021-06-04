@@ -1,4 +1,3 @@
-import io, sys
 import nbformat
 from nbconvert import HTMLExporter
 from pygments import highlight

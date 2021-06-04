@@ -6,21 +6,19 @@
 
 
 <div id="sidenav" class="sidenav sidenav-dark" data-color="dark" data-mdb-content="#content" style="width:220px"
-    data-hidden="true">
+    data-hidden=true>
     <div class="mt-4">
         <div id="header-content" class="pl-3">
-            <img src="{{user.img}}" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;">
-
             <h4>
-                <span style="white-space: nowrap;">{{user.name}}</span>
+                <span style="white-space: nowrap;">{{session["email"]}}</span>
             </h4>
-            <p>{{user.mail}}</p>
+            <p>{{session["username"]}}</p>
         </div>
         <hr class="mb-0">
     </div>
     <div id="scrollContainer" class="ps ps--active-y" style="max-height: calc(100% - 243px); position: relative;">
         <ul class="sidenav-menu">
-            {% for task in user.tasks%}
+            {% for task in session["tasks"]%}
             <li class="sidenav-item">
                 <a class="sidenav-link ripple-surface" href="/" tabindex="1">
                     <i class="fas {{"fa-check" if task==1}}{{"fa-times" if task==0}} fa-fw pr-3"></i>Task
@@ -34,13 +32,7 @@
                 <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-cogs pr-3"></i>Settings</a>
             </li>
             <li class="sidenav-item">
-                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-user pr-3"></i>Profile</a>
-            </li>
-            <li class="sidenav-item">
-                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-shield-alt pr-3"></i>Privacy</a>
-            </li>
-            <li class="sidenav-item">
-                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-user-astronaut pr-3"></i>Log
+                <a class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-user-astronaut pr-3"></i>Go Back
                     out</a>
             </li>
         </ul>
