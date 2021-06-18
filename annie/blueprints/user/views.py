@@ -1,6 +1,6 @@
 import os
 
-from annie.blueprints.user.model import Assignment, Task, User, db
+from annie.blueprints.user.model import Assignment, Submission, User, db
 from flask import (
     Blueprint,
     abort,
@@ -12,6 +12,7 @@ from flask import (
     url_for,
 )
 from werkzeug.utils import secure_filename
+import timeago, datetime
 
 user = Blueprint("user", __name__, template_folder="templates")
 
@@ -47,7 +48,7 @@ def upload():
                 os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
             )
             # TODO: Get ITW Task,
-            task = Task(file=filepath, status="0")
+            task = Submission(file=filepath, status="0")
             # user = User.query.filter_by(lti.lti_id)
 
         else:
@@ -59,14 +60,21 @@ def upload():
 
 @user.route("/launch", methods=["GET", "POST"])
 # @lti(error=error, request="any", app=app)
-def launch(lti=mock_lti):
+def launch(username="Simon Klug"):
     if request.method == "POST":
-        # add user to database
         # check if user exists in DB otherwise add him
-        if User.query.filter_by(lti.lti_id) is None:
+        if User.find_by_username(userid) is None:
             user = User(username=lti.nickname, lti_id=lti.lti_id)
-        db.session.add(user)
-        db.session.commit()
-    # TODO: Add finished tasks to session from DB
-    session["tasks"] = mock_session["tasks"]
-    return render_template("launch.html", lti=lti)
+
+    # Get Current User
+    user = User.find_by_username(username)
+    session["name"] = user.username
+    print(user.submissions[0].assignment.title)
+    return render_template(
+        "launch.html", assignments=user.assignments, submissions=user.submissions
+    )
+
+
+@user.app_template_filter("timeago")
+def fromnow(date):
+    return timeago.format(date, datetime.datetime.now())
