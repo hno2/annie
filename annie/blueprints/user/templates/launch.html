@@ -1,4 +1,4 @@
-{% from '_macros.html' import grade,task_card %}
+{% from '_macros.html' import task_card,gradeblock %}
 {% extends "_base.html" %}
 {%block custom_style%}
 {{ dropzone.load_css() }}
@@ -46,6 +46,7 @@
                 </div>
                 <p class="mb-1">
                 </p>
+                {{gradeblock(sub.grade)}}
                 <small>{{sub.created|timeago}}</small>
             </div>
             {%endfor%}

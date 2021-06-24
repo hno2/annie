@@ -54,6 +54,28 @@ class Assignment(TimestampMixin, db.Model):
         return self
 
 
+class Grade(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    static = db.Column(db.Integer)
+    ai = db.Column(db.Integer)
+    peer = db.Column(db.Integer)
+    overall = db.Column(
+        db.Integer
+    )  # Maybe we should add the content of peer Review here.
+    submission_id = db.Column(
+        db.Integer, db.ForeignKey("submissions.id"), nullable=False
+    )
+
+    def __repr__(self):
+        return "<Grade {overall} (AI-{ai}/Static-{static}/Peer-{peer}) for Submission {submission}>".format(
+            overall=self.overall,
+            ai=self.ai,
+            static=self.static,
+            peer=self.peer,
+            submission=self.submission,
+        )
+
+
 class Submission(TimestampMixin, db.Model):
     __tablename__ = "submissions"
     id = db.Column(db.Integer, primary_key=True)
@@ -64,6 +86,7 @@ class Submission(TimestampMixin, db.Model):
         Assignment,
         backref=db.backref("submissions"),
     )
+    grade = db.relationship(Grade, backref="submission", uselist=False)
 
     def __repr__(self):
         return "<Submission by {} for Assignment {}>".format(self.user, self.assignment)

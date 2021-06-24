@@ -37,34 +37,47 @@
 {%- endmacro %}
 
 
-{% macro grade(percentage) -%}
-<div class="grade">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 110 110">
-        <style>
-            svg {
-                height: 120px;
-            }
+{% macro grade_ring(percentage, name="") -%}
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 110 110">
+    <style>
+        svg {
+            height: 120px;
+        }
 
-            path {
-                stroke-linecap: round;
-                stroke-width: 2;
-            }
+        path {
+            stroke-linecap: round;
+            stroke-width: 2;
+        }
 
-            .bottom {
-                stroke: lightgrey;
-            }
-        </style>
-        <defs>
-            <path id="thePath" d="M40,90
+        .bottom {
+            stroke: lightgrey;
+        }
+    </style>
+    <defs>
+        <path id="thePath" d="M40,90
 A40,40 0 1,1 70,90" style="fill:none;" />
-        </defs>
-        <use xlink:href="#thePath" id="base" class="bottom" />
-        <use xlink:href="#thePath" id="slider" class="top" style="stroke: {{'#FFA900' if percentage<30 else '#1266F1'}};
+    </defs>
+    <use xlink:href="#thePath" id="base" class="bottom" />
+    <use xlink:href="#thePath" id="slider" class="top" style="stroke: {{'#FFA900' if percentage<30 else '#1266F1'}};
             stroke-dasharray: 220;
             stroke-dashoffset: {{220-percentage*2.2}};" />
 
-        <text id="theText" x="55" y="55" dominant-baseline="middle" text-anchor="middle">{{percentage}}%</text>
-    </svg>
-</div>
-
-{%- endmacro %}
+    <text id="theText" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+        <tspan dy="-0.7em">{{percentage}}%</tspan>
+        <tspan dy="1.2em" x="50%">{{name}}</tspan>
+    </text>
+</svg> {%- endmacro %}
+{%macro gradeblock(grade) -%}
+{%if grade.overall%}
+{{grade_ring(grade.overall, "Overall")}}
+{%endif%}
+{%if grade.ai%}
+{{grade_ring(grade.ai, "AI")}}
+{%endif%}
+{%if grade.static%}
+{{grade_ring(grade.static, "Static")}}
+{%endif%}
+{%if grade.peer%}
+{{grade_ring(grade.peer, "Peer")}}
+{%endif%}
+{%- endmacro%}

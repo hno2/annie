@@ -69,7 +69,6 @@ def launch(username="Simon Klug"):
     # Get Current User
     user = User.find_by_username(username)
     session["name"] = user.username
-    print(user.submissions[0].assignment.title)
     return render_template(
         "launch.html", assignments=user.assignments, submissions=user.submissions
     )
