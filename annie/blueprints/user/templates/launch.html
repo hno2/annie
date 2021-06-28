@@ -1,4 +1,4 @@
-{% from '_macros.html' import task_card,gradeblock %}
+{% from '_macros.html' import task_card,gradeblock with context%}
 {% extends "_base.html" %}
 {%block custom_style%}
 {{ dropzone.load_css() }}
@@ -31,7 +31,7 @@
     </section>
     <section id="assignments" style="background:#fbfbfb !important;">
         {%for assignment in assignments %}
-        {{task_card(assignment.title,"Description here",assignment.github)}}
+        {{task_card(assignment.title,"Description here",assignment.github, grade=assignment.submissions[0].grade)}}
         {%endfor%}
 
     </section>
