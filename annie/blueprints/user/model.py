@@ -51,6 +51,10 @@ class Assignment(TimestampMixin, db.Model):
     def find_by_id(cls, id):
         return Assignment.query.filter(Assignment.id == id).first()
 
+    @classmethod
+    def find_by_name(cls, name):
+        return Assignment.query.filter(Assignment.title == name).first()
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -89,7 +93,10 @@ class Submission(TimestampMixin, db.Model):
         UserModel,
         backref=db.backref("submissions", order_by="Submission.created.desc()"),
     )
-    assignment = db.relationship(Assignment, backref=db.backref("submissions"))
+    assignment = db.relationship(
+        Assignment,
+        backref=db.backref("submissions", order_by="Submission.created.desc()"),
+    )
     grade = db.relationship(Grade, backref="submission", uselist=False)
 
     def __repr__(self):

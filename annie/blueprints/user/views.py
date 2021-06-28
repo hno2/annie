@@ -34,8 +34,8 @@ mock_session = {
 mock_lti = {"nickname": "Simon", "lti_id": 42}
 
 
-@user.route("/upload", methods=["GET", "POST"])
-def upload():
+@user.route("/upload/<assignment>", methods=["GET", "POST"])
+def upload(assignment):
     if request.method == "POST":
         if "file" not in request.files:
             abort(400, description="No file path")
@@ -48,13 +48,10 @@ def upload():
             filepath = file.save(
                 os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
             )
-            username = ""  # TODO: Get username from auth request
-            user = UserModel.find_by_username(username)
-            print(user)
-            assignment_id = 1  # TODO: Get id from  request
-            itw = Assignment.find_by_id(assignment_id)
-            print(itw)
-            user.submissions.append(Submission(assignment=itw))
+            # TODO: Get username from auth request
+            user = UserModel.find_by_username(session["name"])
+            cur_assign = Assignment.find_by_name(assignment)
+            user.submissions.append(Submission(assignment=cur_assign))
             user.save()
 
         else:
@@ -75,7 +72,6 @@ def launch(username="Simon Klug"):
     # Get Current User
     user = UserModel.find_by_username(username)
     session["name"] = user.username
-    print(user.submissions)
     return render_template(
         "launch.html",
         assignments=user.assignments,

@@ -56,6 +56,19 @@
                     class="fas fa-download fa-lg"></i>
                 Download</span></a>
     </div>
+    <div class="card-footer text-muted">
+        You can either submit your solution directly from Colab or
+        <!-- Buttons trigger collapse -->
+        <a data-mdb-toggle="collapse" href="#upload" role="button" aria-expanded="false" aria-controls="upload">
+            Upload it here
+        </a>
+        </p>
+        <!-- Collapsed content -->
+        <div class="collapse mt-3" id="upload">
+            {{ dropzone.create(id=name, action="/upload/"+name) }}
+        </div>
+    </div>
+
 </div>
 <br>
 {%- endmacro %}
