@@ -5,11 +5,11 @@ db = SQLAlchemy()
 
 
 class TimestampMixin(object):
-    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated = db.Column(db.DateTime, onupdate=datetime.now)
 
 
-class User(TimestampMixin, db.Model):
+class UserModel(TimestampMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -25,11 +25,11 @@ class User(TimestampMixin, db.Model):
 
     @classmethod
     def find_by_username(cls, username):
-        return User.query.filter(User.username == username).first()
+        return UserModel.query.filter(UserModel.username == username).first()
 
     @classmethod
     def find_by_id(cls, id):
-        return User.query.filter(User.id == id).first()
+        return UserModel.query.filter(UserModel.id == id).first()
 
     def save(self):
         db.session.add(self)
@@ -46,6 +46,10 @@ class Assignment(TimestampMixin, db.Model):
 
     def __repr__(self):
         return "<Assignment %r>" % self.title
+
+    @classmethod
+    def find_by_id(cls, id):
+        return Assignment.query.filter(Assignment.id == id).first()
 
     def save(self):
         db.session.add(self)
@@ -81,11 +85,11 @@ class Submission(TimestampMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     assignment_id = db.Column(db.Integer, db.ForeignKey("assignments.id"))
-    user = db.relationship(User, backref=db.backref("submissions"))
-    assignment = db.relationship(
-        Assignment,
-        backref=db.backref("submissions"),
+    user = db.relationship(
+        UserModel,
+        backref=db.backref("submissions", order_by="Submission.created.desc()"),
     )
+    assignment = db.relationship(Assignment, backref=db.backref("submissions"))
     grade = db.relationship(Grade, backref="submission", uselist=False)
 
     def __repr__(self):

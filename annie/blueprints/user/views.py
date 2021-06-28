@@ -1,6 +1,6 @@
 import os
 
-from annie.blueprints.user.model import Assignment, Submission, User, db
+from annie.blueprints.user.model import Assignment, Submission, UserModel, db
 from flask import (
     Blueprint,
     abort,
@@ -43,19 +43,25 @@ def upload():
         if file.filename == "":
             return "No selected file", 400
         if file and allowed_file(file.filename):
+            # TODO: Do not use filename, but random id
             filename = secure_filename(file.filename)
             filepath = file.save(
                 os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
             )
-            # TODO: Get ITW Task,
-            task = Submission(file=filepath, status="0")
-            # user = User.query.filter_by(lti.lti_id)
+            username = ""  # TODO: Get username from auth request
+            user = UserModel.find_by_username(username)
+            print(user)
+            assignment_id = 1  # TODO: Get id from  request
+            itw = Assignment.find_by_id(assignment_id)
+            print(itw)
+            user.submissions.append(Submission(assignment=itw))
+            user.save()
 
         else:
             return "Only Python or Python notebook files", 400
 
     ##TODO: Add Upload to Queue and to DB
-    return redirect(url_for("eval.home"))
+    return "Uploaded and Added", 200
 
 
 @user.route("/launch", methods=["GET", "POST"])
@@ -63,14 +69,17 @@ def upload():
 def launch(username="Simon Klug"):
     if request.method == "POST":
         # check if user exists in DB otherwise add him
-        if User.find_by_username(userid) is None:
-            user = User(username=lti.nickname, lti_id=lti.lti_id)
+        if UserModel.find_by_username(userid) is None:
+            user = UserModel(username=lti.nickname, lti_id=lti.lti_id)
 
     # Get Current User
-    user = User.find_by_username(username)
+    user = UserModel.find_by_username(username)
     session["name"] = user.username
+    print(user.submissions)
     return render_template(
-        "launch.html", assignments=user.assignments, submissions=user.submissions
+        "launch.html",
+        assignments=user.assignments,
+        submissions=user.submissions,
     )
 
 
