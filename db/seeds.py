@@ -1,5 +1,5 @@
 # This file should contain records you want created when you run flask db seed.
-from annie.blueprints.user.model import Grade, User, Assignment, Submission
+from annie.blueprints.user.model import Grade, UserModel, Assignment, Submission
 
 
 itw = Assignment(
@@ -26,4 +26,4 @@ test_user = {
     ],
 }
 
-User(**test_user).save()
+UserModel(**test_user).save()
