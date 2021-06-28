@@ -3,6 +3,9 @@ from celery import Celery
 from annie.blueprints.eval import eval
 from annie.blueprints.user import user
 from flask_dropzone import Dropzone
+from flask_admin import Admin
+from annie.blueprints.user.model import UserModel, Assignment, Submission
+from flask_admin.contrib.sqla import ModelView
 
 
 def create_celery_app(app=None):
@@ -49,6 +52,11 @@ def create_app(settings_override=None):
     dropzone.init_app(app)
     app.register_blueprint(eval)
     app.register_blueprint(user)
+
+    admin = Admin(app, name="Annie", template_mode="bootstrap3")
+    admin.add_view(ModelView(UserModel, db.session, name="Users"))
+    admin.add_view(ModelView(Assignment, db.session, name="Assignments"))
+    admin.add_view(ModelView(Submission, db.session, name="Submissions"))
 
     return app
 
