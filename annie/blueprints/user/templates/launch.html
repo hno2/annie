@@ -29,11 +29,15 @@
             </div>
         </div>
     </section>
-    <section id="assignments" style="background:#fbfbfb !important;">
-        {%for assignment in assignments %}
-        {{task_card(assignment.title,"Description here",assignment.github, grade=assignment.submissions[0].grade)}}
-        {%endfor%}
 
+    <section id="assignments">
+        {% if assignments %}
+        {%for assignment in assignments %}
+        {{task_card(assignment.title,"Description here",assignment.github, submissions=assignment.submissions)}}
+        {%endfor%}
+        {%else%}
+        You currently have no assignments
+        {% endif %}
     </section>
     <section id="submissions">
 

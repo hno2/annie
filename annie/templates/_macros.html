@@ -33,19 +33,17 @@
 {%set status="In Progress"%}
 {%endif%}
 
-<span class="badge
-{{mapping[status]}}
-">{{status}}
+<span class="badge {{mapping[status]}}">{{status}}
     {%if grade%}
     <span class="badge bg-light text-dark ms-2">{{grade.overall}}/100</span>
     <span class="visually-hidden">grade</span></span>
 {%endif%}
 {%- endmacro %}
 
-{% macro task_card(name, description,repository, grade) -%}
+{% macro task_card(name, description,repository, submissions) -%}
 <div class="card">
     <h5 class="card-header d-flex justify-content-between align-items-center">{{name}}
-        {{grade_block(grade)}}</h5>
+        {{grade_block(submissions[0].grade) if submissions}}</h5>
     <div class="card-body">
         <p class="card-text">
             {{description}}
@@ -59,12 +57,12 @@
     <div class="card-footer text-muted">
         You can either submit your solution directly from Colab or
         <!-- Buttons trigger collapse -->
-        <a data-mdb-toggle="collapse" href="#upload" role="button" aria-expanded="false" aria-controls="upload">
+        <a data-mdb-toggle="collapse" href="#upload-{{name|replace(' ' ,'')}}" role="button" aria-expanded="false" aria-controls="upload-{{name|replace(' ' ,'')}}">
             Upload it here
         </a>
         </p>
         <!-- Collapsed content -->
-        <div class="collapse mt-3" id="upload">
+        <div class="collapse mt-3" id="upload-{{name|replace(' ' ,'')}}">
             {{ dropzone.create(id=name, action="/upload/"+name) }}
         </div>
     </div>

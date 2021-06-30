@@ -18,12 +18,14 @@ gradethree = Grade(static=10, ai=60, overall=100, peer=80)
 
 test_user = {
     "username": "Simon Klug",
-    "assignments": [itw, pd],
     "submissions": [
         Submission(assignment=itw, grade=gradeone),
         Submission(assignment=itw, grade=gradetwo),
         Submission(assignment=pd, grade=gradethree),
     ],
 }
-
-UserModel(**test_user).save()
+user = UserModel(**test_user).save()
+pd.users.append(user)
+itw.users.append(user)
+itw.save()
+pd.save()

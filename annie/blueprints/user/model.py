@@ -13,11 +13,9 @@ class UserModel(TimestampMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    assignments = db.relationship(
-        "Assignment",
-        secondary="submissions",
-        backref=db.backref("users", lazy=True, viewonly=True),
-        viewonly=True,
+    submissions = db.relationship(
+        "Submission",
+        backref=db.backref("user", lazy=True),
     )
 
     def __repr__(self):
@@ -37,12 +35,24 @@ class UserModel(TimestampMixin, db.Model):
         return self
 
 
+assigned = db.Table(
+    "assigned",
+    db.Column("assignment", db.Integer, db.ForeignKey("assignments.id")),
+    db.Column("user", db.Integer, db.ForeignKey("users.id")),
+)
+
+
 class Assignment(TimestampMixin, db.Model):
     __tablename__ = "assignments"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(40), nullable=False)
     static = db.Column(db.Boolean, nullable=False)
     github = db.Column(db.String(40))
+    users = db.relationship(
+        "UserModel",
+        secondary=assigned,
+        backref=db.backref("assignments", lazy=True),
+    )
 
     def __repr__(self):
         return "<Assignment %r>" % self.title
@@ -70,9 +80,7 @@ class Grade(db.Model):
     overall = db.Column(
         db.Integer
     )  # Maybe we should add the content of peer Review here.
-    submission_id = db.Column(
-        db.Integer, db.ForeignKey("submissions.id"), nullable=False
-    )
+    submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
 
     def __repr__(self):
         return "<Grade {overall} (AI-{ai}/Static-{static}/Peer-{peer}) for Submission {submission}>".format(
@@ -87,12 +95,9 @@ class Grade(db.Model):
 class Submission(TimestampMixin, db.Model):
     __tablename__ = "submissions"
     id = db.Column(db.Integer, primary_key=True)
+    filepath = db.Column(db.String(40))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     assignment_id = db.Column(db.Integer, db.ForeignKey("assignments.id"))
-    user = db.relationship(
-        UserModel,
-        backref=db.backref("submissions", order_by="Submission.created.desc()"),
-    )
     assignment = db.relationship(
         Assignment,
         backref=db.backref("submissions", order_by="Submission.created.desc()"),
