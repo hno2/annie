@@ -5,12 +5,12 @@ from annie.blueprints.user.model import Grade, UserModel, Assignment, Submission
 itw = Assignment(
     static=False,
     title="Into the wild",
-    github="/fastai/fastai/blob/master/nbs/examples/ulmfit.ipynb",
+    github="/hno2/annie/blob/main/example.ipynb",
 )
 pd = Assignment(
     static=True,
     title="Getting Started with Pandas",
-    github="fastai/fastai/blob/master/nbs/examples/camvid.ipynb",
+    github="/hno2/annie/blob/main/example.ipynb",
 )
 itw.save()
 pd.save()
