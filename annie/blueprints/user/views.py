@@ -14,7 +14,6 @@ from flask import (
 )
 from pylti.flask import lti
 import shortuuid
-from annie.blueprints.user.task import evaluate_nb
 from werkzeug.utils import redirect, secure_filename
 import timeago, datetime
 
