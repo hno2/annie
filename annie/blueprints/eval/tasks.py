@@ -8,7 +8,10 @@ from fastai.text.all import *
 
 from blurr.data.all import *
 
-inf_learn = load_learner(fname="seq_class_learn_export.pkl")
+
+def load_model(file: str = "seq_class_learn_export.pkl"):
+    learner = load_learner(fname=file)
+    return learner
 
 
 def get_preds(content: str) -> list[str]:
@@ -31,7 +34,7 @@ def get_preds(content: str) -> list[str]:
     return preds
 
 
-def convertnb(content: str) -> tuple[str, list[str]]:
+def convert_to_html(content: str) -> tuple[str, list[str]]:
     """Converts a JupyterNotebook to html, by using nbconvert
 
     Args:
