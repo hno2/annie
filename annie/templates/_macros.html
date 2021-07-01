@@ -47,10 +47,14 @@
     <div class="card-body">
         <p class="card-text">
             {{description}}
+            {%if submissions %}
+            <hr>
+            <a href="/review/{{submissions[0].filepath}}" class="btn btn-primary">Review Submission</a>
+            {%endif%}
         </p>
-        <a href="https://colab.research.google.com/github/{{repository}}"><span class="badge bg-warning text-dark">
+        <a href="https://colab.research.google.com/github/{{repository}}" target="_blank"><span class="badge bg-warning text-dark">
                 <i class="fas fa-infinity"></i> Open in Colab</span></a>
-        <a href="https://www.github.com/{{repository}}"><span class="badge bg-success ms-2 me-5"><i
+        <a href="https://www.github.com/{{repository}}"target="_blank"><span class="badge bg-success ms-2 me-5"><i
                     class="fas fa-download fa-lg"></i>
                 Download</span></a>
     </div>
