@@ -6,3 +6,4 @@ pylint>=2
 oauth2
 Flask-SQLAlchemy
 Flask-Admin
+shortuuid

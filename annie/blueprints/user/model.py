@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import shortuuid
 
 db = SQLAlchemy()
 
@@ -13,9 +14,11 @@ class UserModel(TimestampMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    auth_token = db.Column(db.String(40), unique=True, default=shortuuid.uuid())
     submissions = db.relationship(
         "Submission",
         backref=db.backref("user", lazy=True),
+        order_by="Submission.created.desc()",
     )
 
     def __repr__(self):
@@ -24,6 +27,10 @@ class UserModel(TimestampMixin, db.Model):
     @classmethod
     def find_by_username(cls, username):
         return UserModel.query.filter(UserModel.username == username).first()
+
+    @classmethod
+    def find_by_token(cls, token):
+        return UserModel.query.filter(UserModel.auth_token == token).first()
 
     @classmethod
     def find_by_id(cls, id):
@@ -48,6 +55,7 @@ class Assignment(TimestampMixin, db.Model):
     title = db.Column(db.String(40), nullable=False)
     static = db.Column(db.Boolean, nullable=False)
     github = db.Column(db.String(40))
+    description = db.Column(db.String(80))
     users = db.relationship(
         "UserModel",
         secondary=assigned,
@@ -95,7 +103,7 @@ class Grade(db.Model):
 class Submission(TimestampMixin, db.Model):
     __tablename__ = "submissions"
     id = db.Column(db.Integer, primary_key=True)
-    filepath = db.Column(db.String(40))
+    filepath = db.Column(db.String(80))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     assignment_id = db.Column(db.Integer, db.ForeignKey("assignments.id"))
     assignment = db.relationship(
