@@ -5,5 +5,9 @@ gunicorn
 pylint>=2
 oauth2
 Flask-SQLAlchemy
+Flask-DB
+flask-dropzone
 Flask-Admin
 shortuuid
+celery
+timeago
