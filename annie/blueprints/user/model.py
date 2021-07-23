@@ -61,6 +61,7 @@ class Assignment(TimestampMixin, db.Model):
         secondary=assigned,
         backref=db.backref("assignments", lazy=True),
     )
+    path = db.Column(db.Unicode(128))
 
     def __repr__(self):
         return "<Assignment %r>" % self.title

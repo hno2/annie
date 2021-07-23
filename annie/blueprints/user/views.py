@@ -67,7 +67,11 @@ def upload(assignment):
                 shortuuid.uuid() + "." + file.filename.split(".")[1]
             )
 
-            file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
+            file.save(
+                os.path.join(
+                    current_app.config["UPLOAD_FOLDER"], "submissions", filename
+                )
+            )
             user.submissions.append(
                 Submission(
                     assignment=Assignment.find_by_name(assignment), filepath=filename
