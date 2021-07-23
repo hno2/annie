@@ -48,26 +48,26 @@ def error(exception=None):
 @user.route("/upload/<assignment>", methods=["GET", "POST"])
 def upload(assignment):
     if request.method == "POST":
+        # Check user token exists in session or request
+        if "token" in session:
+            auth_token = session["token"]
+        elif "auth_token" in request.form:
+            auth_token = request.form["auth_token"]
+        else:
+            return "No user", 400
+        user = UserModel.find_by_token(auth_token)
+
         if "file" not in request.files:
             abort(400, description="No file path")
         file = request.files["file"]
         if file.filename == "":
             return "No selected file", 400
         if file and allowed_file(file.filename):
-
             filename = secure_filename(
                 shortuuid.uuid() + "." + file.filename.split(".")[1]
             )
 
             file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
-            if "username" in session:
-                print("username")
-                user = UserModel.find_by_username(session["username"])
-            elif request.form["auth_token"]:
-                print("auth_token")
-                user = UserModel.find_by_token(request.form["auth_token"])
-            else:
-                return
             user.submissions.append(
                 Submission(
                     assignment=Assignment.find_by_name(assignment), filepath=filename
