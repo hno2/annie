@@ -3,7 +3,7 @@ from celery import Celery
 from annie.blueprints.eval import eval
 from annie.blueprints.user import user
 from flask_dropzone import Dropzone
-from flask_admin import Admin
+from flask_admin import Admin, form
 from annie.blueprints.user.model import UserModel, Assignment, Submission
 from flask_admin.contrib.sqla import ModelView
 
@@ -53,9 +53,24 @@ def create_app(settings_override=None):
     app.register_blueprint(eval)
     app.register_blueprint(user)
 
+    class FileView(ModelView):
+        # Override form field to use Flask-Admin FileUploadField
+        form_overrides = {"path": form.FileUploadField}
+
+        # Pass additional parameters to 'path' to FileUploadField constructor
+        form_args = {
+            "path": {
+                "label": "Master NB",
+                "base_path": app.config["UPLOAD_FOLDER"] + "/assignments",
+                "relative_path": app.config["UPLOAD_FOLDER"] + "/assignments",
+                "allow_overwrite": False,
+                "allowed_extensions": list(app.config["ALLOWED_EXTENSIONS"]),
+            }
+        }
+
     admin = Admin(app, name="Annie", template_mode="bootstrap3")
     admin.add_view(ModelView(UserModel, db.session, name="Users"))
-    admin.add_view(ModelView(Assignment, db.session, name="Assignments"))
+    admin.add_view(FileView(Assignment, db.session, name="Assignment"))
     admin.add_view(ModelView(Submission, db.session, name="Submissions"))
 
     return app
