@@ -34,7 +34,9 @@
       </div>
 
     </section>
-    <!-- Tabs navs -->
+    {%if file.grade%}
+    <section id="assessment">
+
     <div class=" card text-center">
       <div class="card-header">
 
@@ -92,9 +94,8 @@
       </div>
 
     </div>
-
-
     </section>
+    {%endif%}
   </div>
 </main>
 {% endblock  %}
