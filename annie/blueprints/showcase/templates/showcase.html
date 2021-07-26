@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+{% from '_macros.html' import showcase_block %}
+{% block content %}
+<div class="container"> 
+<section id="recently">
+    <h4>Recently Added</h4>
+    {{showcase_block(showcases.getrecent())}}
+
+  </section>
+
+  <h4>Most Popular</h4>
+  {{showcase_block(showcases.getpopular())}}
+  <h4>Explore</h4>
+  Random
+</div class="container">
+{% endblock content%}

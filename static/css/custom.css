@@ -561,3 +561,7 @@
     flex-grow: 100;
     background-color: #e0e0e0
 }
+
+.upvote {
+    cursor: pointer;
+}

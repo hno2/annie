@@ -9,7 +9,9 @@ eval = Blueprint("eval", __name__, template_folder="templates")
 
 @eval.get("/review/<filepath>")
 def home(filepath):
-    with open("uploads/" + filepath, "r") as file:
+    with open(
+        current_app.config["UPLOAD_FOLDER"] + "/submissions/" + filepath, "r"
+    ) as file:
         content = file.read()
     file_data = {}
     try:

@@ -2,6 +2,7 @@ from flask import Flask
 from celery import Celery
 from annie.blueprints.eval import eval
 from annie.blueprints.user import user
+from annie.blueprints.showcase import showcase
 from flask_dropzone import Dropzone
 from flask_admin import Admin, form
 from annie.blueprints.user.model import UserModel, Assignment, Submission
@@ -56,6 +57,7 @@ def create_app(settings_override=None):
     dropzone.init_app(app)
     app.register_blueprint(eval)
     app.register_blueprint(user)
+    app.register_blueprint(showcase)
 
     class FileView(ModelView):
         # Override form field to use Flask-Admin FileUploadField

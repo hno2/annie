@@ -30,3 +30,19 @@ function align_comments() {
 $(document).ready(
     align_comments()
 )
+
+$(".upvote").on("click", function () {
+    var new_value = Number($(".score", this).text()) + 1;
+    $(".score", this).text(new_value);
+    $.ajax({
+        context: this,
+        type: "POST",
+        url: "/upvote",
+        data: {
+            showcase_id: $(this).parents(".card").attr("id")
+        }
+    }).done(function () {
+        // remove click listener to prevent multiple clicks
+        $(this).off("click");
+    });
+});

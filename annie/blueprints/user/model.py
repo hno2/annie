@@ -1,13 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from annie.extensions import db, TimestampMixin
 import shortuuid
-
-db = SQLAlchemy()
-
-
-class TimestampMixin(object):
-    created = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated = db.Column(db.DateTime, onupdate=datetime.now)
 
 
 class UserModel(TimestampMixin, db.Model):
@@ -102,6 +94,44 @@ class Grade(db.Model):
         )
 
 
+class Showcase(TimestampMixin, db.Model):
+    __tablename__ = "showcases"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    # Maybe instead of a number score, the score will be user_ids of the users who upvoted. Score is then calculated by the number of users who upvoted.
+    score = db.Column(db.Integer, nullable=False, default=0)
+    submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
+
+    @classmethod
+    def upvote(cls, showcase_id):
+        showcase = Showcase.query.filter(Showcase.id == showcase_id).first()
+
+        showcase.score += 1
+        showcase.save()
+        return showcase
+
+    @classmethod
+    def getrecent(cls, limit: int = 20):
+        return Showcase.query.order_by(Showcase.id.desc()).limit(limit).all()
+
+    @classmethod
+    def getpopular(cls, limit: int = 20):
+        return Showcase.query.order_by(Showcase.score.desc()).limit(limit).all()
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    def __repr__(self):
+        return "<Showcase {name} - Submission {submission} - score {score}>".format(
+            name=self.name,
+            score=self.score,
+            submission=self.submission,
+        )
+
+
 class Submission(TimestampMixin, db.Model):
     __tablename__ = "submissions"
     id = db.Column(db.Integer, primary_key=True)
@@ -111,6 +141,9 @@ class Submission(TimestampMixin, db.Model):
     assignment = db.relationship(
         Assignment,
         backref=db.backref("submissions", order_by="Submission.created.desc()"),
+    )
+    showcase = db.relationship(
+        Showcase, backref=db.backref("submission", uselist=False)
     )
     grade = db.relationship(Grade, backref="submission", uselist=False)
 

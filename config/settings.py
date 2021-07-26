@@ -14,9 +14,7 @@ PYLTI_CONFIG = {
     }
 }
 ## UPLOAD STUFF
-UPLOAD_FOLDER = (
-    "uploads"  # Upload by users will be added here, make sure this folder exists
-)
+UPLOAD_FOLDER = "uploads"  # Submissions and Assignment files will be added here, make sure this folder exists
 ALLOWED_EXTENSIONS = {"ipynb", "txt", "py"}
 DROPZONE_ALLOWED_FILE_CUSTOM = True
 DROPZONE_ALLOWED_FILE_TYPE = ".ipynb, .py, .txt"
@@ -31,7 +29,6 @@ BROKER_URL = os.getenv("REDIS_URL", "pyamqp://guest@localhost//")
 
 # Celery.
 CELERY_CONFIG = {
-    "broker_url": BROKER_URL,
-    "result_backend": BROKER_URL,
+    "broker": BROKER_URL,
     "include": ["annie.blueprints.eval.tasks"],
 }

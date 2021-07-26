@@ -18,6 +18,34 @@
 </div>
 
 {%- endmacro %}
+{% macro showcase_block(showcases) -%}
+<div class="card-group">
+  {% for showcase in showcases %}
+    <div class="card" id="{{showcase.id}}">
+      <div class="card-body">
+        <h5 class="card-title">{{showcase.name}}</h5>
+        <p class="card-text">
+         {{showcase.description}}
+        </p>
+        <p class="card-text">
+          
+        </p>
+        <div class="card-footer">
+
+          <div class="btn-wrapper text-center d-flex justify-content-between">
+            <small class="text-muted">{{showcase.created|timeago}}</small> 
+            <p class="upvote"><span class="far fa-thumbs-up"></span><span class="score">{{showcase.score}}</span></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {%endfor%}
+
+    
+    </div>
+
+{%- endmacro %}
 
 {% macro grade_block(grade,threshold=50) -%}
 
