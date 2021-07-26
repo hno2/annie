@@ -6,6 +6,7 @@ from flask_dropzone import Dropzone
 from flask_admin import Admin, form
 from annie.blueprints.user.model import UserModel, Assignment, Submission
 from flask_admin.contrib.sqla import ModelView
+import os
 
 
 def create_celery_app(app=None):
@@ -44,6 +45,9 @@ def create_app(settings_override=None):
 
     if settings_override:
         app.config.update(settings_override)
+
+    os.makedirs(app.config["UPLOAD_FOLDER"] + "/submissions/", exist_ok=True)
+    os.makedirs(app.config["UPLOAD_FOLDER"] + "/assignments/", exist_ok=True)
     from annie.blueprints.user.model import db
 
     db.init_app(app)
