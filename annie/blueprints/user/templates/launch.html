@@ -42,7 +42,7 @@
         <div class="alert alert-primary" role="alert">Use this token for authentication <code id="auth_token">{{user.auth_token}}</code> </div>
         {% if assignments %}
         {%for assignment in assignments %}
-        {{task_card(assignment.title,"Description here",assignment.github, submissions=assignment.submissions)}}
+        {{task_card(assignment.title,assignment.description,assignment.github, submissions=assignment.submissions)}}
         {%endfor%}
         {%else%}
         You currently have no assignments

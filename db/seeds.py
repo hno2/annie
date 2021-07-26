@@ -9,8 +9,10 @@ itw = Assignment(
 )
 pd = Assignment(
     static=True,
-    title="Getting Started with Pandas",
+    title="Pandas retten den Tag",
+    description="Hier lernt man wie man mit Daten umgeht und was Pandas so ist",
     github="/hno2/annie/blob/main/example.ipynb",
+    max_submissions=1,
 )
 itw.save()
 pd.save()

@@ -62,6 +62,7 @@ class Assignment(TimestampMixin, db.Model):
         backref=db.backref("assignments", lazy=True),
     )
     path = db.Column(db.Unicode(128))
+    max_submissions = db.Column(db.Integer, default=100)
 
     def __repr__(self):
         return "<Assignment %r>" % self.title

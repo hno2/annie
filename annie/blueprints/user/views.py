@@ -54,9 +54,13 @@ def upload(assignment):
         elif "auth_token" in request.form:
             auth_token = request.form["auth_token"]
         else:
-            return "No user", 400
+            return "No user or no user authentication", 400
         user = UserModel.find_by_token(auth_token)
-
+        assignment = Assignment.find_by_name(assignment)
+        if [el.assignment == assignment for el in user.submissions].count(
+            True
+        ) > assignment.max_submissions - 1:
+            return "Maximum Number of submissions", 400
         if "file" not in request.files:
             abort(400, description="No file path")
         file = request.files["file"]
@@ -66,19 +70,15 @@ def upload(assignment):
             filename = secure_filename(
                 shortuuid.uuid() + "." + file.filename.split(".")[1]
             )
-
             file.save(
                 os.path.join(
                     current_app.config["UPLOAD_FOLDER"], "submissions", filename
                 )
             )
             user.submissions.append(
-                Submission(
-                    assignment=Assignment.find_by_name(assignment), filepath=filename
-                )
+                Submission(assignment=assignment, filepath=filename)
             )
             user.save()
-
         else:
             return "Only Python or Python notebook files", 400
 
@@ -110,7 +110,6 @@ def main():
         session["token"] = UserModel.find_by_id(1).auth_token  # Dummy User
         flash("We will use a dummy user, as you have not logged in via a LTI Provider")
     user = UserModel.find_by_token(session["token"])
-    print(session["token"])
     if user is None:
         abort(404, "No user with this Auth Token")
 
