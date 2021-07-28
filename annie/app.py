@@ -1,12 +1,11 @@
 from flask import Flask
 from celery import Celery
-from annie.blueprints.eval import eval
+from annie.blueprints.evaluation import evaluation
 from annie.blueprints.user import user
 from annie.blueprints.showcase import showcase
-from flask_dropzone import Dropzone
-from flask_admin import Admin, form
-from annie.blueprints.user.model import UserModel, Assignment, Submission
-from flask_admin.contrib.sqla import ModelView
+
+from annie.extensions import db, dropzone
+
 import os
 
 
@@ -48,36 +47,19 @@ def create_app(settings_override=None):
         app.config.update(settings_override)
 
     os.makedirs(app.config["UPLOAD_FOLDER"] + "/submissions/", exist_ok=True)
-    os.makedirs(app.config["UPLOAD_FOLDER"] + "/assignments/", exist_ok=True)
-    from annie.blueprints.user.model import db
+    os.makedirs(app.config["UPLOAD_FOLDER"] + "/assignments/master", exist_ok=True)
+    os.makedirs(app.config["UPLOAD_FOLDER"] + "/assignments/student", exist_ok=True)
 
     db.init_app(app)
-    # Maybe Move this first line to the corresponding blueprint
-    dropzone = Dropzone()
     dropzone.init_app(app)
-    app.register_blueprint(eval)
+    with app.app_context():
+        from annie.blueprints.admin.model import admin
+
+    admin.init_app(app)
+
+    app.register_blueprint(evaluation)
     app.register_blueprint(user)
     app.register_blueprint(showcase)
-
-    class FileView(ModelView):
-        # Override form field to use Flask-Admin FileUploadField
-        form_overrides = {"path": form.FileUploadField}
-
-        # Pass additional parameters to 'path' to FileUploadField constructor
-        form_args = {
-            "path": {
-                "label": "Master NB",
-                "base_path": app.config["UPLOAD_FOLDER"] + "/assignments",
-                "relative_path": app.config["UPLOAD_FOLDER"] + "/assignments",
-                "allow_overwrite": False,
-                "allowed_extensions": list(app.config["ALLOWED_EXTENSIONS"]),
-            }
-        }
-
-    admin = Admin(app, name="Annie", template_mode="bootstrap3")
-    admin.add_view(ModelView(UserModel, db.session, name="Users"))
-    admin.add_view(FileView(Assignment, db.session, name="Assignment"))
-    admin.add_view(ModelView(Submission, db.session, name="Submissions"))
 
     return app
 
