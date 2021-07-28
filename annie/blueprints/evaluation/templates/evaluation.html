@@ -4,7 +4,13 @@
 {% block content %}
 <main class="mt-5">
   <div class="container">
+
+
     <section id="welcome">
+      <button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#showcase-modal">
+        Ready to show it to others?
+      </button>
+      {% include '_modal.html' %}
     </section>
     <section id="evaluation">
       <div class="row">

@@ -1,18 +1,21 @@
 from flask import Blueprint, render_template, current_app
 
-# from annie.blueprints.eval.tasks import get_preds
-from annie.blueprints.eval.steve import static_code_check, convert_to_html
+# from annie.blueprints.evaluation.tasks import get_preds
+from annie.blueprints.evaluation.steve import static_code_check, convert_to_html
 from nbformat.reader import NotJSONError
 
-eval = Blueprint("eval", __name__, template_folder="templates")
+evaluation = Blueprint("evaluation", __name__, template_folder="templates")
 
 
-@eval.get("/review/<filepath>")
+@evaluation.get("/review/<filepath>")
 def home(filepath):
-    with open(
-        current_app.config["UPLOAD_FOLDER"] + "/submissions/" + filepath, "r"
-    ) as file:
-        content = file.read()
+    try:
+        with open(
+            current_app.config["UPLOAD_FOLDER"] + "/submissions/" + filepath, "r"
+        ) as file:
+            content = file.read()
+    except FileNotFoundError:
+        return "File not found", 404
     file_data = {}
     try:
         file_data["html"] = convert_to_html(content)

@@ -1,0 +1,71 @@
+<div class="modal" id="showcase-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Just a few questions, to get started!</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-mdb-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          
+<ul class="stepper stepper-vertical" id="stepper-submit" data-mdb-stepper-linear="true"
+data-mdb-stepper-type="vertical">
+<li class="stepper-step stepper-completed" id="upload">
+    <div class="stepper-head" tabindex="0">
+        <span class="stepper-head-icon">1 </span>
+        <span class="stepper-head-text"> Upload Files <i class="fas fa-check-circle"></i></span>
+    </div>
+    <div class="stepper-content py-3">
+    </div>
+</li>
+<!-- First step -->
+
+<!-- Second step -->
+<li class="stepper-step" id="description">
+    <div class="stepper-head">
+        <span class="stepper-head-icon"> 2 </span>
+        <span class="stepper-head-text"> Describe your UseCase </span>
+    </div>
+    <div class="stepper-content py-3">
+        Specify the problem you are solving here. Think about specific and attainable goals.
+        <div class="form-outline mb-4">
+            <textarea id="question" class="form-control" rows="4"></textarea>
+            <label class="form-label" for="question">Question</label>
+        </div>
+
+        <div class="form-check d-flex justify-content-center mb-4">
+            <input class="form-check-input me-2" type="checkbox" value="" id="video" />
+            <label class="form-check-label" for="video">
+                I want to upload a video instead.
+            </label>
+        </div>
+        Or Upload Video
+</li>
+<!-- Second step -->
+
+<!-- Third step -->
+<li class="stepper-step">
+    <div class="stepper-head">
+        <span class="stepper-head-icon">2 </span>
+        <span class="stepper-head-text"> Peer Review </span>
+    </div>
+    <div class="stepper-content py-3">
+        Check out these tags to match you with a peer reviewer.
+        Once you have reviewed two other students code.
+    </div>
+</li>
+</ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-mdb-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Show the world!</button>
+        </div>
+      </div>
+    </div>
+  </div>

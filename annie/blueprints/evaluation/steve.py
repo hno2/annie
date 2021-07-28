@@ -36,6 +36,21 @@ def static_code_check(filepath: str) -> tuple[int, list]:
     return int(score), messages[1 : len(messages) - 1]
 
 
+from jinja2 import DictLoader
+
+dl = DictLoader(
+    {
+        "footer": """
+{%- extends '/basic/index.html.j2' -%}
+
+{% block footer %}
+FOOOOOOOOTEEEEER
+{% endblock footer %}
+"""
+    }
+)
+
+
 def convert_to_html(content: str) -> tuple[str, list[str]]:
     """Converts a JupyterNotebook to html, by using nbconvert
 
@@ -47,8 +62,7 @@ def convert_to_html(content: str) -> tuple[str, list[str]]:
         list[str]: List of Classification Results for each code cell
     """
     nb = nbformat.reads(content, as_version=4)
-    html_exporter = HTMLExporter()
-    html_exporter.template_name = "classic"
+    html_exporter = HTMLExporter(template_file="basic")
     (body, _) = html_exporter.from_notebook_node(nb)
     return body
 
