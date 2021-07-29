@@ -9,16 +9,14 @@ from annie.blueprints.showcase.model import Showcase, Tag
 
 
 itw = Assignment(
-    static=False,
     title="Into the wild",
     github="/hno2/annie/blob/main/example.ipynb",
 )
 pd = Assignment(
-    static=True,
     title="Pandas retten den Tag",
     description="Hier lernt man wie man mit Daten umgeht und was Pandas so ist",
     github="/hno2/annie/blob/main/example.ipynb",
-    max_submissions=1,
+    path="autograder.zip",
 )
 itw.save()
 pd.save()

@@ -45,7 +45,6 @@ class Assignment(TimestampMixin, db.Model):
     __tablename__ = "assignments"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(40), nullable=False)
-    static = db.Column(db.Boolean, nullable=False)
     github = db.Column(db.String(40))
     description = db.Column(db.String(80))
     users = db.relationship(
@@ -53,7 +52,7 @@ class Assignment(TimestampMixin, db.Model):
         secondary=assigned,
         backref=db.backref("assignments", lazy=True),
     )
-    path = db.Column(db.Unicode(128))
+    path = db.Column(db.Unicode(128), default=None)  # None if not static check
     max_submissions = db.Column(db.Integer, default=100)
 
     def __repr__(self):
