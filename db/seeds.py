@@ -4,8 +4,8 @@ from annie.blueprints.user.model import (
     UserModel,
     Assignment,
     Submission,
-    Showcase,
 )
+from annie.blueprints.showcase.model import Showcase, Tag
 
 
 itw = Assignment(
@@ -39,6 +39,9 @@ Showcase(
 Showcase(
     name="Just me Testing2", description="LoremThree", submission=subthree, score=0
 ).save()
+
+for tag in ["classification", "regression", "clustering", "deep learning", "lstm"]:
+    Tag(name=tag).save()
 
 test_user = {
     "username": "Dummy User",

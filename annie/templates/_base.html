@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/friendly.css') }}">
     <!-- Your custom styles (optional) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-    {%block custom_style%}{%endblock%}
+    {%block custom_css%}{%endblock%}
 </head>
 
 <body>
@@ -44,7 +44,7 @@
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
     <!-- Custom -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
     {% block custom_js %}{%endblock%}
 </body>
 

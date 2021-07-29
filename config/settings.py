@@ -30,5 +30,6 @@ BROKER_URL = os.getenv("REDIS_URL", "pyamqp://guest@localhost//")
 # Celery.
 CELERY_CONFIG = {
     "broker": BROKER_URL,
-    "include": ["annie.blueprints.eval.tasks"],
+    "include": ["annie.blueprints.evaluation.tasks"],
 }
+ENABLE_SHOWCASE = True

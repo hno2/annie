@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, current_app
 # from annie.blueprints.evaluation.tasks import get_preds
 from annie.blueprints.evaluation.steve import static_code_check, convert_to_html
 from nbformat.reader import NotJSONError
+from annie.blueprints.showcase.model import Tag
 
 evaluation = Blueprint("evaluation", __name__, template_folder="templates")
 
@@ -24,4 +25,4 @@ def home(filepath):
     if filepath.split(".")[1] == "py":
         score, msgs = static_code_check(filepath)
         file_data["static"] = {"score": score, "msgs": msgs}
-    return render_template("evaluation.html", file=file_data)
+    return render_template("evaluation.html", file=file_data, tags=Tag.query.all())

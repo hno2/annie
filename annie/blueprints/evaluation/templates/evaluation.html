@@ -7,10 +7,12 @@
 
 
     <section id="welcome">
+      {% if config["SHOWCASE_ENABLED"]%}
       <button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#showcase-modal">
         Ready to show it to others?
       </button>
       {% include '_modal.html' %}
+      {% endif%}
     </section>
     <section id="evaluation">
       <div class="row">
@@ -105,3 +107,10 @@
   </div>
 </main>
 {% endblock  %}
+{%block custom_css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}">
+{%endblock%}
+{%block custom_js%}
+<script type="text/javascript" src="{{ url_for('static', filename='js/showcase.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+{%endblock%}

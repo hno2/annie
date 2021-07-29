@@ -31,6 +31,19 @@ $(document).ready(
     align_comments()
 )
 
+// Highlight element on hover and copy to clipboard on click
+function hoverandcopy(el) {
+    el.hover(function () {
+        el.addClass("hover");
+    }, function () {
+        el.removeClass("hover");
+    });
+    el.click(function (e) {
+        var el = $(this);
+        e.clipboardData.setData("text/plain", el.text());
+    });
+}
+
 $(".upvote").on("click", function () {
     var new_value = Number($(".score", this).text()) + 1;
     $(".score", this).text(new_value);

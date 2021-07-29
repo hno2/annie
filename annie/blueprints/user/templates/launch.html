@@ -1,6 +1,6 @@
 {% from '_macros.html' import task_card,gradeblock with context%}
 {% extends "_base.html" %}
-{%block custom_style%}
+{%block custom_css%}
 {{ dropzone.load_css() }}
 <style>
     .dropzone {
@@ -8,7 +8,7 @@
         min-height: 200px;
     }
 </style>
-{%endblock custom_style%}
+{%endblock custom_css%}
 
 {% block content %}
 <main class="container">

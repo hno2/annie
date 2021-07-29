@@ -59,7 +59,8 @@ def create_app(settings_override=None):
 
     app.register_blueprint(evaluation)
     app.register_blueprint(user)
-    app.register_blueprint(showcase)
+    if app.config["ENABLE_SHOWCASE"]:
+        app.register_blueprint(showcase)
 
     return app
 
