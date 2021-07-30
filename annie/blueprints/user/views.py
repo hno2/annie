@@ -112,13 +112,7 @@ def main():
     user = UserModel.find_by_token(session["token"])
     if user is None:
         abort(404, "No user with this Auth Token")
-
-    return render_template(
-        "launch.html",
-        user=user,
-        assignments=user.assignments,
-        submissions=user.submissions,
-    )
+    return render_template("index.html", user=user)
 
 
 @user.app_template_filter("timeago")

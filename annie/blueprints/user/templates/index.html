@@ -41,18 +41,18 @@
     <section id="assignments">
         <div class="alert alert-primary" role="alert">Use this token for authentication <code id="auth_token">{{user.auth_token}}</code> </div>
         {% if assignments %}
-        {%for assignment in assignments %}
-        {{task_card(assignment.title,assignment.description,assignment.github, submissions=assignment.submissions)}}
-        {%endfor%}
+            {%for assignment in user.assignments %}
+                {{task_card(assignment.title,assignment.description,assignment.github, submissions=assignment.submissions)}}
+            {%endfor%}
         {%else%}
-        You currently have no assignments
+            You currently have no assignments
         {% endif %}
     </section>
     <section id="submissions">
 
         <h4>Your latest submissions and results</h4>
         <div class="list-group">
-            {%for sub in submissions %}
+            {%for sub in user.submissions %}
             <div class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{sub.assignment.title}}</h5>
