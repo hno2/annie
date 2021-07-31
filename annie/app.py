@@ -3,13 +3,14 @@ from celery import Celery
 from annie.blueprints.evaluation import evaluation
 from annie.blueprints.user import user
 from annie.blueprints.showcase import showcase
+from annie.blueprints.clippy import clippy
 
 from annie.extensions import db, dropzone
 
 import os
 
 
-def create_celery_app(app=None):
+def create_celery_app(app: Flask = None) -> Celery:
     """
     Create a new Celery object and tie together the Celery config to the app's
     config. Wrap all tasks in the context of the application.
@@ -61,6 +62,8 @@ def create_app(settings_override=None):
     app.register_blueprint(user)
     if app.config["ENABLE_SHOWCASE"]:
         app.register_blueprint(showcase)
+    if app.config["ENABLE_CLIPPY"]:
+        app.register_blueprint(clippy)
 
     return app
 

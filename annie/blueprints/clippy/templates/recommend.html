@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+{% block content %}
+
+<div class="container my-3">
+    <div class="chat">
+        <h1>Chat with Clippy</h1>
+        <div class="row gy-3" id="chatbox" >
+            {% for message in messages %}
+            {%if message.type=="clippy"%}
+            <div class="col-1">
+                <img src="{{url_for('static', filename='img/clippy.svg')}}" class="clippy" alt="Clippy" height="60px">
+            </div>
+            {%endif%}
+
+            <div class="col-10 card {{'text-white bg-primary' if message.type=='clippy' else ''}}">
+                <div class="card-body">
+                    {{message.message}}
+                </div>
+            </div>
+            {%if message.type=="user"%}
+            <div class="col-2">
+                <img src="{{url_for('static', filename='img/user.svg')}}" alt="User" height="57px">
+            </div>
+            {%endif%}
+
+
+            {%endfor%}
+        </div>
+
+        <div class="form-outline mt-2">
+            <input class="form-control" id="message" type="text" required>
+            <label class="form-label" for="message">Message</label>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/clippy.js') }}"></script>
+{% endblock %}
