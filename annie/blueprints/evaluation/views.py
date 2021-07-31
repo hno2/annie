@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, current_app
 # from annie.blueprints.evaluation.tasks import get_preds
 from annie.blueprints.evaluation.steve import static_code_check, convert_to_html
 from nbformat.reader import NotJSONError
-from annie.blueprints.showcase.model import Tag
+from annie.blueprints.playground.model import Tag
 
 evaluation = Blueprint("evaluation", __name__, template_folder="templates")
 

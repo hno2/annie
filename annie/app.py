@@ -2,7 +2,7 @@ from flask import Flask
 from celery import Celery
 from annie.blueprints.evaluation import evaluation
 from annie.blueprints.user import user
-from annie.blueprints.showcase import showcase
+from annie.blueprints.playground import playground
 from annie.blueprints.clippy import clippy
 
 from annie.extensions import db, dropzone
@@ -53,18 +53,17 @@ def create_app(settings_override=None):
 
     db.init_app(app)
     dropzone.init_app(app)
-    with app.app_context():
-        from annie.blueprints.admin.model import admin
-
-    admin.init_app(app)
 
     app.register_blueprint(evaluation)
     app.register_blueprint(user)
     if app.config["ENABLE_SHOWCASE"]:
-        app.register_blueprint(showcase)
+        app.register_blueprint(playground)
     if app.config["ENABLE_CLIPPY"]:
         app.register_blueprint(clippy)
+    with app.app_context():
+        from annie.blueprints.admin.model import admin
 
+    admin.init_app(app)
     return app
 
 

@@ -1,10 +1,31 @@
-from annie.extensions import db, TimestampMixin
+from annie.extensions import BaseMixin, db
 from annie.blueprints.user.model import Submission
+from sqlalchemy.ext.associationproxy import association_proxy
+
+showcase_tags = db.Table(
+    "showcasetags",
+    db.Column(
+        "showcase_id", db.Integer, db.ForeignKey("showcases.id"), primary_key=True
+    ),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id"), primary_key=True),
+)
 
 
-class Showcase(TimestampMixin, db.Model):
+def _tag_find_or_create(tag_name: str):
+    """Creates tag if it doesn't exist
+
+    Returns:
+        [Tag]: The tag object
+    """
+    tag = Tag.query.filter_by(name=tag_name).first()
+    if not (tag):
+        tag = Tag(name=tag_name)
+
+    return tag
+
+
+class Showcase(BaseMixin, db.Model):
     __tablename__ = "showcases"
-    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
     # Maybe instead of a number score, the score will be user_ids of the users who upvoted. Score is then calculated by the number of users who upvoted. Or in User Model ids of upvoted
@@ -13,11 +34,14 @@ class Showcase(TimestampMixin, db.Model):
         Submission, backref="showcase", lazy=True, uselist=False
     )
     submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
-    #    tags=db.relationship('Tag', secondary='showcase_tags', backref='showcases')
-    @classmethod
-    def upvote(cls, showcase_id):
-        showcase = Showcase.query.filter(Showcase.id == showcase_id).first()
+    tg = db.relationship("Tag", secondary=lambda: showcase_tags, backref="showcases")
+    tags = association_proxy(
+        "tg", "name", creator=_tag_find_or_create
+    )  # Proxy the name of the tg relationship
 
+    @classmethod
+    def upvote(cls, id):
+        showcase = Showcase.query.get(id)
         showcase.score += 1
         showcase.save()
         return showcase
@@ -30,11 +54,6 @@ class Showcase(TimestampMixin, db.Model):
     def getpopular(cls, limit: int = 20):
         return Showcase.query.order_by(Showcase.score.desc()).limit(limit).all()
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
     def __repr__(self):
         return "<Showcase {name} - Submission {submission} - score {score}>".format(
             name=self.name,
@@ -43,7 +62,7 @@ class Showcase(TimestampMixin, db.Model):
         )
 
 
-class Tag(TimestampMixin, db.Model):
+class Tag(BaseMixin, db.Model):
     __tablename__ = "tags"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
@@ -51,10 +70,8 @@ class Tag(TimestampMixin, db.Model):
     def __repr__(self):
         return "<Tag %r>" % self.name
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-        return self
+    def __init__(self, name):
+        self.name = name
 
     @classmethod
     def get_limit(cls, limit: int = 100):
