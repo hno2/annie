@@ -11,3 +11,5 @@ Flask-Admin
 shortuuid
 celery
 timeago
+markdown
+bleach
