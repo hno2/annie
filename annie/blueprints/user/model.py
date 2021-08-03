@@ -17,15 +17,15 @@ class UserModel(BaseMixin, db.Model):
         return "<User %r>" % self.username
 
     @classmethod
-    def find_by_username(cls, username):
+    def get_by_username(cls, username):
         return UserModel.query.filter(UserModel.username == username).first()
 
     @classmethod
-    def find_by_token(cls, token):
+    def get_by_token(cls, token):
         return UserModel.query.filter(UserModel.auth_token == token).first()
 
     @classmethod
-    def find_by_id(cls, id):
+    def get_by_id(cls, id):
         return UserModel.query.get(id)
 
 
@@ -53,11 +53,11 @@ class Assignment(BaseMixin, db.Model):
         return "<Assignment %r>" % self.title
 
     @classmethod
-    def find_by_id(cls, id):
+    def get_by_id(cls, id):
         return Assignment.query.filter(Assignment.id == id).first()
 
     @classmethod
-    def find_by_name(cls, name):
+    def get_by_name(cls, name):
         return Assignment.query.filter(Assignment.title == name).first()
 
 
@@ -77,5 +77,5 @@ class Submission(BaseMixin, db.Model):
         return "<Submission by {} for Assignment {}>".format(self.user, self.assignment)
 
     @classmethod
-    def find_by_id(cls, id):
+    def get_by_id(cls, id):
         return Submission.query.get(id)

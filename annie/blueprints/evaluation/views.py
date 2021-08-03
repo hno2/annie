@@ -73,7 +73,6 @@ def add_comment() -> str:
             )
         )
         if "file" and "cell_id" in request.form:
-            print(session["token"])
             comment = Comment(
                 markdown=request.form["markdown"],
                 html=html,
@@ -83,7 +82,7 @@ def add_comment() -> str:
                 .first()
                 .id,
                 cell_id=request.form["cell_id"],
-                user_id=UserModel.find_by_token(session["token"]).id,
+                user_id=UserModel.get_by_token(session["token"]).id,
             )
             comment.save()
         else:
