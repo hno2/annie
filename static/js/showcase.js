@@ -29,7 +29,7 @@ $(document).ready(function () {
     });
 })();
 
-$(".upvote").on("click", function () {
+$(".pointer").on("click", function () {
     var new_value = Number($(".score", this).text()) + 1;
     $(".score", this).text(new_value);
     $.ajax({
@@ -42,5 +42,6 @@ $(".upvote").on("click", function () {
     }).done(function () {
         // remove click listener to prevent multiple clicks
         $(this).off("click");
+        $(this).removeClass("pointer").addClass("text-primary");
     });
 });

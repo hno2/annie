@@ -27,6 +27,7 @@
         {% endif %}
     {% endwith %}
 {%- endmacro %}
+
 {% macro showcase_block(showcases) -%}
 <div class="card-group">
   {% for showcase in showcases %}
@@ -39,18 +40,19 @@
         <p class="card-text">
           
         </p>
+        </div>
         <div class="card-footer">
             {%for tag in showcase.tags%}
             <a href="?filtered_by={{tag}}" class="badge rounded-pill bg-secondary">{{tag}}</a>
             {%endfor%}
           <div class="btn-wrapper text-center d-flex justify-content-between">
             <small class="text-muted">{{showcase.created|timeago}}</small> 
-            <p class="upvote"><span class="far fa-thumbs-up"></span><span class="score">{{showcase.score}}</span></p>
+
+            <p class="upvote {{'text-primary' if user in showcase.voted_users else 'pointer'}}"><span class="far fa-thumbs-up"></span><span class="score">{{showcase.score}}</span></p>
           </div>
 
         </div>
       </div>
-    </div>
     {%endfor%}
 
     
