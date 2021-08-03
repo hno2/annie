@@ -12,12 +12,12 @@ from annie.blueprints.clippy.model import Chat, Message
 itw = Assignment(
     title="Into the wild",
     description="Bei Into the Wild, darfst du deine eigene Fragestellung bearbeiten. Ob die Analyse von Tweets, Sprach- oder Texterkennung oder Bilderkennung, was kannst du in vier Wochen schaffen?",
-    github="/hno2/annie/blob/main/example.ipynb",
+    github="/hno2/example_assignment/blob/main/example.ipynb",
 )
 pd = Assignment(
     title="Pandas retten den Tag",
     description="Pandas sind tolle Tiere und die Standart Python Bibliothek für Tabellendaten.",
-    github="/hno2/annie/blob/main/example.ipynb",
+    github="/hno2/example_assignment/blob/main/example.ipynb",
     path="autograder.zip",
 )
 itw.save()
