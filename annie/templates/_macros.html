@@ -40,7 +40,9 @@
           
         </p>
         <div class="card-footer">
-
+            {%for tag in showcase.tags%}
+            <a href="?filtered_by={{tag}}" class="badge rounded-pill bg-secondary">{{tag}}</a>
+            {%endfor%}
           <div class="btn-wrapper text-center d-flex justify-content-between">
             <small class="text-muted">{{showcase.created|timeago}}</small> 
             <p class="upvote"><span class="far fa-thumbs-up"></span><span class="score">{{showcase.score}}</span></p>
@@ -60,6 +62,7 @@
 <li class="list-group-item">
 {{text|safe}}</li>
 {%- endmacro %}
+
 {% macro grade_block(grade,threshold=50) -%}
 
 {% set mapping = {"Success": "bg-success", "In Progress": "bg-info", "Failed":"bg-warning"} -%}
