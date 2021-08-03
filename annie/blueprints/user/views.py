@@ -48,8 +48,8 @@ def upload(assignment):
             session["token"] = auth_token
         else:
             return "No user or no user authentication", 400
-        user = UserModel.find_by_token(auth_token)
-        assignment = Assignment.find_by_name(assignment)
+        user = UserModel.get_by_token(auth_token)
+        assignment = Assignment.get_by_name(assignment)
         autgrader_path = assignment.path
         if [el.assignment == assignment for el in user.submissions].count(
             True
@@ -89,7 +89,7 @@ def upload(assignment):
 def launch(lti=lti):
     if request.method == "POST":
         # check if user exists in DB otherwise add him
-        if UserModel.find_by_token(request.form["user_id"]) is None:  #
+        if UserModel.get_by_token(request.form["user_id"]) is None:  #
             user = UserModel(
                 username=request.form["lis_person_name_full"],
                 auth_token=request.form["user_id"],
@@ -104,10 +104,10 @@ def launch(lti=lti):
 
 @user.route("/", methods=["GET", "POST"])
 def main():
-    if not "user_id" in session:
-        session["token"] = UserModel.find_by_id(1).auth_token  # Dummy User
+    if not "token" in session:
+        session["token"] = UserModel.get_by_id(1).auth_token  # Dummy User
         flash("We will use a dummy user, as you have not logged in via a LTI Provider")
-    user = UserModel.find_by_token(session["token"])
+    user = UserModel.get_by_token(session["token"])
     if user is None:
         abort(404, "No user with this Auth Token")
     return render_template("index.html", user=user)
