@@ -1,36 +1,35 @@
-from transformers import *
-from fastai.text.all import *
+from enum import auto
+from annie.app import create_celery_app
+from otter.api import grade_submission
+from flask import current_app
+from annie.blueprints.user.model import Submission, Grade
 
-from blurr.data.all import *
-
-
-def load_model(file: str = "seq_class_learn_export.pkl"):
-    learner = load_learner(fname=file)
-    return learner
+celery = create_celery_app()
 
 
-def get_preds(content: str) -> list[str]:
-    """Classifies all code cells of a jupyter nb
+@celery.task()
+def evaluate_submission(
+    notebook_path: str, autograder_file: str, submission_id: int
+) -> None:
+    submission = Submission.find_by_id(submission_id)
+    print("id: ", submission_id, " submission: ", submission)
+    results = evaluate_static(
+        current_app.config["UPLOAD_FOLDER"] + "/submissions/" + notebook_path,
+        current_app.config["UPLOAD_FOLDER"] + "/assignments/master/" + autograder_file,
+    )
+    if submission.grade is None:
+        submission.grade = Grade(
+            static=(results.total / results.possible) * 100,
+            overall=(results.total / results.possible) * 100,
+        )
+        print(submission.grade)
+    else:
+        submission.grade.static = results.total / results.possible
+        # submission.grade.update_overall()
+    submission.save()
+    return None
 
-    Args:
-        content (str): nb content
 
-    Returns:
-        list[str]: A list of string with each str corresponding to the classification result for a code cell
-    """
-    codes = []
-    nb_content = json.loads(content)
-    for cell in nb_content["cells"]:
-        if cell["cell_type"] == "code":  # Only Code Cells
-            cell_content = "".join(cell["source"])
-            if cell_content != "":  # exclude empty cells
-                codes.append(cell_content)
-    preds = inf_learn.blurr_predict(codes)
-    return preds
-
-
-if __name__ == "__main__":
-    # print(get_preds(["import pandas as pd", "plt.plot('confusion matrix')"]))
-    with open("test.ipynb", "r") as file:
-        content = file.read()
-        get_preds(content)
+def evaluate_static(notebook_path: str, autograder_file: str):
+    results = grade_submission(autograder_file, notebook_path, quiet=True)
+    return results

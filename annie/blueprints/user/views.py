@@ -28,14 +28,6 @@ def allowed_file(filename):
     )
 
 
-mock_session = {
-    "name": "Foo Bar",
-    "mail": "foo.bar@kit.edu",
-    "img": "https://randomuser.me/api/portraits/women/72.jpg",
-    "tasks": [1, 0, 1, 1, 0, 1, 2],  # 1 sucess, 2 In Progress, 0 unseccessfull
-}
-
-
 def error(exception=None):
     """render error page
     :param exception: optional exception
@@ -53,10 +45,12 @@ def upload(assignment):
             auth_token = session["token"]
         elif "auth_token" in request.form:
             auth_token = request.form["auth_token"]
+            session["token"] = auth_token
         else:
             return "No user or no user authentication", 400
         user = UserModel.find_by_token(auth_token)
         assignment = Assignment.find_by_name(assignment)
+        autgrader_path = assignment.path
         if [el.assignment == assignment for el in user.submissions].count(
             True
         ) > assignment.max_submissions - 1:
@@ -75,14 +69,18 @@ def upload(assignment):
                     current_app.config["UPLOAD_FOLDER"], "submissions", filename
                 )
             )
-            user.submissions.append(
-                Submission(assignment=assignment, filepath=filename)
-            )
+            submission = Submission(assignment=assignment, filepath=filename)
+            db.session.flush()
+            submission_id = submission.id
+            user.submissions.append(submission)
             user.save()
         else:
             return "Only Python or Python notebook files", 400
 
-    ##TODO: Add Upload to Queue
+    # Add Upload to Queue
+    from annie.blueprints.evaluation.tasks import evaluate_submission
+
+    evaluate_submission(filename, autgrader_path, submission_id=submission_id)
     return "Uploaded and Added", 200
 
 
