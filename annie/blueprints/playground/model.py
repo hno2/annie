@@ -54,6 +54,16 @@ class Showcase(BaseMixin, db.Model):
     def getpopular(cls, limit: int = 20):
         return Showcase.query.order_by(Showcase.score.desc()).limit(limit).all()
 
+    @classmethod
+    def get_by_tag(cls, tag, limit: int = 20):
+        return (
+            Showcase.query.join(Showcase.tg)
+            .filter(Tag.name == tag)
+            .order_by(Showcase.score.desc())
+            .limit(limit)
+            .all()
+        )
+
     def __repr__(self):
         return "<Showcase {name} - Submission {submission} - score {score}>".format(
             name=self.name,

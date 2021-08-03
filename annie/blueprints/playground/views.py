@@ -6,8 +6,13 @@ playground = Blueprint("playground", __name__, template_folder="templates")
 
 @playground.route("/playground")
 def overview():
-
-    return render_template("playground.html", showcases=Showcase)
+    return render_template(
+        "playground.html",
+        showcases=Showcase,
+        filtered=request.args.get("filtered_by")
+        if request.args.get("filtered_by")
+        else None,
+    )
 
 
 @playground.route("/upvote", methods=["POST"])
@@ -20,8 +25,8 @@ def upvote():
         return "Error: " + str(e), 500
 
 
-@playground.route("/add_playground", methods=["POST"])
-def add_playground():
+@playground.route("/add_showcase", methods=["POST"])
+def add_showcase():
     # Check if tag in database or create it if not
     tags = request.form.getlist("tags[]")
     Showcase(

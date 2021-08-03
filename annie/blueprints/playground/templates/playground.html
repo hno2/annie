@@ -3,6 +3,12 @@
 {% block content %}
 <div class="container"> 
   {{flash_message()}}
+  {%if filtered%}
+  <section id="search">
+    <h4>Filtered by Tag <span class="badge rounded-pill bg-primary">{{filtered}}<a href="/playground" class="btn-close btn-close-white ms-2" aria-label="Close"></a></span></h4>
+    {{showcase_block(showcases.get_by_tag(filtered))}}
+    {%else%}
+  </section>
 <section id="recently">
     <h4>Recently Added</h4>
     {{showcase_block(showcases.getrecent())}}
@@ -13,5 +19,6 @@
   {{showcase_block(showcases.getpopular())}}
   <h4>Explore</h4>
   Random
+  {%endif%}
 </div class="container">
 {% endblock content%}
