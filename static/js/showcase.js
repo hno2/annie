@@ -4,7 +4,10 @@ $("#video").on("click", function () {
     $("#videolink").prop("disabled", !$("#videolink").prop("disabled"));
 });
 $(document).ready(function () {
-    $('#tags').select2();
+    $('#tags').select2({
+        tags: true,
+        tokenSeparators: [',', ';']
+    });
 });
 
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -25,3 +28,19 @@ $(document).ready(function () {
         }, false);
     });
 })();
+
+$(".upvote").on("click", function () {
+    var new_value = Number($(".score", this).text()) + 1;
+    $(".score", this).text(new_value);
+    $.ajax({
+        context: this,
+        type: "POST",
+        url: "/upvote",
+        data: {
+            showcase_id: $(this).parents(".card").attr("id")
+        }
+    }).done(function () {
+        // remove click listener to prevent multiple clicks
+        $(this).off("click");
+    });
+});
