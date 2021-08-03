@@ -6,6 +6,7 @@ from nbconvert import HTMLExporter
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
+from traitlets.config import Config
 
 
 def convert_to_py(filepath: str):
@@ -36,22 +37,7 @@ def static_code_check(filepath: str) -> tuple[int, list]:
     return int(score), messages[1 : len(messages) - 1]
 
 
-from jinja2 import DictLoader
-
-dl = DictLoader(
-    {
-        "footer": """
-{%- extends '/basic/index.html.j2' -%}
-
-{% block footer %}
-FOOOOOOOOTEEEEER
-{% endblock footer %}
-"""
-    }
-)
-
-
-def convert_to_html(content: str) -> tuple[str, list[str]]:
+def convert_to_html(content: str, comments=None) -> tuple[str, list[str]]:
     """Converts a JupyterNotebook to html, by using nbconvert
 
     Args:
@@ -61,9 +47,17 @@ def convert_to_html(content: str) -> tuple[str, list[str]]:
         str: The HTML conversion of the Jupyter NB
         list[str]: List of Classification Results for each code cell
     """
+    comments = [com.__dict__ for com in comments]
+    print(comments)
+    c = Config()
+    c.TemplateExporter.template_file = (
+        "annie/blueprints/evaluation/templates/notebook.html"
+    )
+    c.TemplateExporter.exclude_input_prompt = True
+    HTMLExporter.exclude_anchor_links = True
     nb = nbformat.reads(content, as_version=4)
-    html_exporter = HTMLExporter(template_file="basic")
-    (body, _) = html_exporter.from_notebook_node(nb)
+    html_exporter = HTMLExporter(config=c)
+    (body, _) = html_exporter.from_notebook_node(nb, resources={"comments": comments})
     return body
 
 

@@ -1,0 +1,34 @@
+{%- extends 'classic/base.html.j2' -%}
+{% block input_group %}
+<div class="card mt-3" id="{{cell.metadata.id}}">
+    <div class="card-body">
+        {{ super() }}
+    </div>
+    <div class="card-footer ">
+        <!-- <i class="far fa-comment float-right"role="button"></i> -->
+        <div class="comment-open">
+            <ul class="list-group list-group-flush" id="comment-list-{{cell.metadata.id}}">
+
+                {%if resources.comments%}
+                {%for comment in resources.comments%}
+                {% if comment.cell_id==cell.metadata.id %}
+                <li class="list-group-item">
+                    {{comment.html}}
+                </li>
+                {%endif%}
+                {%endfor%}
+                {%endif%}
+            </ul>
+            <div class="form-outline">
+                <input class="form-control comment-box" id="comment-{{cell.metadata.id}}"></input>
+                <label class="form-label" for="comment-{{cell.metadata.id}}">+ Add your comment</label>
+            </div>
+            <small class="text-muted d-flex justify-content-between">
+                <span role="button" class="post"> Post <i class="fas fa-level-down-alt fa-rotate-90"></i></span>
+                <span class="description">
+                    Comments support `inline code`, ```code blocks```, **bold** and _italic_ formatting</span>
+        </div>
+        </small>
+    </div>
+</div>
+{%- endblock input_group %}

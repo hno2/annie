@@ -56,6 +56,10 @@
 
 {%- endmacro %}
 
+{%- macro comment(text)%}
+<li class="list-group-item">
+{{text|safe}}</li>
+{%- endmacro %}
 {% macro grade_block(grade,threshold=50) -%}
 
 {% set mapping = {"Success": "bg-success", "In Progress": "bg-info", "Failed":"bg-warning"} -%}
