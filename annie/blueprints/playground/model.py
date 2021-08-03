@@ -1,5 +1,5 @@
 from annie.extensions import BaseMixin, db
-from annie.blueprints.user.model import Submission
+from annie.blueprints.user.model import Submission, UserModel
 from sqlalchemy.ext.associationproxy import association_proxy
 
 showcase_tags = db.Table(
@@ -8,6 +8,14 @@ showcase_tags = db.Table(
         "showcase_id", db.Integer, db.ForeignKey("showcases.id"), primary_key=True
     ),
     db.Column("tag_id", db.Integer, db.ForeignKey("tags.id"), primary_key=True),
+)
+
+showcase_votes = db.Table(
+    "showcasevotes",
+    db.Column(
+        "showcase_id", db.Integer, db.ForeignKey("showcases.id"), primary_key=True
+    ),
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
 )
 
 
@@ -35,15 +43,23 @@ class Showcase(BaseMixin, db.Model):
     )
     submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
     tg = db.relationship("Tag", secondary=lambda: showcase_tags, backref="showcases")
-    tags = association_proxy(
+    tags = association_proxy(  # Proxy the name of the tg relationship
         "tg", "name", creator=_tag_find_or_create
-    )  # Proxy the name of the tg relationship
+    )
+    # Relationship between UserModel and Showcase
+    voted_users = db.relationship(
+        "UserModel", secondary=lambda: showcase_votes, backref="voted_showcases"
+    )
 
     @classmethod
-    def upvote(cls, id):
-        showcase = Showcase.query.get(id)
-        showcase.score += 1
-        showcase.save()
+    def upvote(cls, showcase_id: int, token: str):
+        # Check that user has not already upvoted
+        user = UserModel.get_by_token(token)
+        showcase = Showcase.query.get(showcase_id)
+        if user not in showcase.voted_users:
+            showcase.voted_users.append(user)
+            showcase.score = len(showcase.voted_users)
+            showcase.save()
         return showcase
 
     @classmethod
