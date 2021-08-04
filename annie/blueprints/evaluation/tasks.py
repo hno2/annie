@@ -11,7 +11,7 @@ celery = create_celery_app()
 def evaluate_submission(
     notebook_path: str, autograder_file: str, submission_id: int
 ) -> None:
-    submission = Submission.find_by_id(submission_id)
+    submission = Submission.get_by_id(submission_id)
     print("id: ", submission_id, " submission: ", submission)
     results = evaluate_static(
         current_app.config["UPLOAD_FOLDER"] + "/submissions/" + notebook_path,
