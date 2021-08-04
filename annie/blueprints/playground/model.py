@@ -39,7 +39,10 @@ class Showcase(BaseMixin, db.Model):
     # Maybe instead of a number score, the score will be user_ids of the users who upvoted. Score is then calculated by the number of users who upvoted. Or in User Model ids of upvoted
     score = db.Column(db.Integer, nullable=False, default=0)
     submission = db.relationship(
-        Submission, backref="showcase", lazy=True, uselist=False
+        Submission,
+        backref=db.backref("showcase", uselist=False),
+        lazy=True,
+        uselist=False,
     )
     submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
     tg = db.relationship("Tag", secondary=lambda: showcase_tags, backref="showcases")
@@ -55,6 +58,9 @@ class Showcase(BaseMixin, db.Model):
     def upvote(cls, showcase_id: int, token: str):
         # Check that user has not already upvoted
         user = UserModel.get_by_token(token)
+        if not user:
+            print("No user")
+            return False
         showcase = Showcase.query.get(showcase_id)
         if user not in showcase.voted_users:
             showcase.voted_users.append(user)
