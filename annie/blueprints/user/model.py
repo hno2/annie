@@ -6,7 +6,7 @@ from annie.blueprints.evaluation.model import Grade
 class UserModel(BaseMixin, db.Model):
     __tablename__ = "users"
     username = db.Column(db.String(80), unique=True, nullable=False)
-    auth_token = db.Column(db.String(40), unique=True, default=shortuuid.uuid())
+    auth_token = db.Column(db.String(40), unique=True, default=shortuuid.uuid)
     submissions = db.relationship(
         "Submission",
         backref=db.backref("user", lazy=True),
