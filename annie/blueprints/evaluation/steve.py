@@ -7,6 +7,7 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
 from traitlets.config import Config
+from annie.blueprints.user.views import fromnow
 
 
 def convert_to_py(filepath: str):
@@ -47,16 +48,21 @@ def convert_to_html(content: str, comments=None) -> tuple[str, list[str]]:
         str: The HTML conversion of the Jupyter NB
         list[str]: List of Classification Results for each code cell
     """
-    comments = [com.__dict__ for com in comments]
+    if comments:
+        comments = [com.__dict__ for com in comments]
     print(comments)
     c = Config()
     c.TemplateExporter.template_file = (
         "annie/blueprints/evaluation/templates/notebook.html"
     )
     c.TemplateExporter.exclude_input_prompt = True
-    HTMLExporter.exclude_anchor_links = True
+    c.HTMLExporter.exclude_anchor_links = True
     nb = nbformat.reads(content, as_version=4)
     html_exporter = HTMLExporter(config=c)
+    html_exporter.template_paths.append(
+        "/Users/simon/Desktop/Masterarbeit/code/annie/annie/templates"
+    )  # Add macro template paths so we can use the custom macro
+    html_exporter.register_filter("timeago", fromnow)
     (body, _) = html_exporter.from_notebook_node(nb, resources={"comments": comments})
     return body
 

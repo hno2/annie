@@ -1,4 +1,4 @@
-{% from '_macros.html' import stars %}
+{% from '_macros.html' import stars, showcase_identity with context %}
 
 {% extends "_base.html" %}
 {% block content %}
@@ -7,7 +7,8 @@
 
 
     <section id="welcome">
-      {% if config["ENABLE_SHOWCASE"]%}
+
+      {% if config["ENABLE_SHOWCASE"] and not submission.showcase%}
       <button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#showcase-modal">
         Ready to show it to others?
       </button>
@@ -21,7 +22,12 @@
             {{file.html|safe}}
           </div>
         </div>
-      {%if file.process%}
+        {%if submission.showcase%}
+        <div class="col-md-4">
+          {{showcase_identity(submission.showcase, linked=false, comments=comments)}}
+        </div>
+        {%endif%}
+        {%if file.process%}
         <div class="col-md-3">
           {%set index_labels=["Algorithm_Selection","Conclusio","Data_Adaption","Data_Understanding","Hyperparameter_Adjustment","None"]%}
           {%for labels in file.process%}
@@ -30,78 +36,74 @@
               <div class="card-body">
                 {%for label in labels[0][0]%}
                 {%set conf=labels[2][0][index_labels.index(label)]|float|round(2)%}
-                <p class="card-text">{{label}} - <span
-                    class="badge {{'bg-success' if conf > 0.5 else 'bg-warning text-dark'}}">{{conf}}
+                <p class="card-text">{{label}} - <span class="badge {{'bg-success' if conf > 0.5 else 'bg-warning text-dark'}}">{{conf}}
                   </span></p> {%endfor%}
               </div>
             </div>
           </div>
           {%endfor %}
         </div>
-      {%endif%}
+        {%endif%}
       </div>
 
     </section>
     {%if file.grade%}
     <section id="assessment">
 
-    <div class=" card text-center">
-      <div class="card-header">
+      <div class=" card text-center">
+        <div class="card-header">
 
-        <ul class="nav nav-tabs card-header-tabs" id="grades" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="grades-ai" data-mdb-toggle="tab" href="#grades-tabs-1" role="tab"
-              aria-controls="grades-tabs-1" aria-selected="true">AI Evaluvation</a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link" id="grades-style" data-mdb-toggle="tab" href="#grades-tabs-2" role="tab"
-              aria-controls="grades-tabs-2" aria-selected="false">Style</a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link" id="grades-reviewer" data-mdb-toggle="tab" href="#grades-tabs-3" role="tab"
-              aria-controls="grades-tabs-3" aria-selected="false">Reviewer</a>
-          </li>
-        </ul>
-      </div>
-      <!-- Tabs content -->
+          <ul class="nav nav-tabs card-header-tabs" id="grades" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="grades-ai" data-mdb-toggle="tab" href="#grades-tabs-1" role="tab" aria-controls="grades-tabs-1" aria-selected="true">AI Evaluvation</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="grades-style" data-mdb-toggle="tab" href="#grades-tabs-2" role="tab" aria-controls="grades-tabs-2" aria-selected="false">Style</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="grades-reviewer" data-mdb-toggle="tab" href="#grades-tabs-3" role="tab" aria-controls="grades-tabs-3" aria-selected="false">Reviewer</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Tabs content -->
 
-      <div class="card-body">
-        <div class="tab-content" id="grades-content">
-          <div class="tab-pane fade show active" id="grades-tabs-1" role="tabpanel" aria-labelledby="grades-ai">
-            <ul>
-              <li>Follow a process</li>
-              <li>Common Errors
-                {{stars(50)}}</li>
-              </li>
-            </ul>
-          </div>
-          <div class="tab-pane fade" id="grades-tabs-2" role="tabpanel" aria-labelledby="grades-style">
-            <div class="row">
-              <h4>Notes on your style</h4>
-              {%if file.static%}
-              {{stars(file.static.score)}}
-              Here we want to provide you some tips to make your code more readable, they are powered by PyLint,
-              you can
-              find more information with the codes listed here.
-              <div class="col-md-6">
-                <ul class="list-group text-left">
-                  {%for msg in file.static.msgs%}
-                  <li class="list-group-item">{{msg}}</li>
-                  {%endfor%}
-                </ul>
+        <div class="card-body">
+          <div class="tab-content" id="grades-content">
+            <div class="tab-pane fade show active" id="grades-tabs-1" role="tabpanel" aria-labelledby="grades-ai">
+              <ul>
+                <li>Follow a process</li>
+                <li>Common Errors
+                  {{stars(50)}}</li>
+                </li>
+              </ul>
+            </div>
+            <div class="tab-pane fade" id="grades-tabs-2" role="tabpanel" aria-labelledby="grades-style">
+              <div class="row">
+                <h4>Notes on your style</h4>
+                {%if file.static%}
+                {{stars(file.static.score)}}
+                Here we want to provide you some tips to make your code more readable, they are powered by PyLint,
+                you can
+                find more information with the codes listed here.
+                <div class="col-md-6">
+                  <ul class="list-group text-left">
+                    {%for msg in file.static.msgs%}
+                    <li class="list-group-item">{{msg}}</li>
+                    {%endfor%}
+                  </ul>
+                </div>
+                {%endif%}
               </div>
-              {%endif%}
+            </div>
+            <div class="tab-pane fade" id="grades-tabs-3" role="tabpanel" aria-labelledby="grades-reviewer">
+              Unfortunatly no reviewer has yet looked at your assignment. Check out the comments made by our AI
+              Evaluation
+              system.
             </div>
           </div>
-          <div class="tab-pane fade" id="grades-tabs-3" role="tabpanel" aria-labelledby="grades-reviewer">
-            Unfortunatly no reviewer has yet looked at your assignment. Check out the comments made by our AI
-            Evaluation
-            system.
-          </div>
         </div>
-      </div>
 
-    </div>
+      </div>
     </section>
     {%endif%}
   </div>

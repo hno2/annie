@@ -15,6 +15,7 @@ from nbformat.reader import NotJSONError
 from annie.blueprints.playground.model import Tag
 from annie.blueprints.evaluation.model import Comment
 from annie.blueprints.user.model import Submission, UserModel
+from annie.common import user_or_dummy
 
 
 evaluation = Blueprint("evaluation", __name__, template_folder="templates")
@@ -31,20 +32,27 @@ def home(filepath):
         return "File not found", 404
     file_data = {}
     # Get submission Id based on submission filepath
-    submission_id = Submission.query.filter_by(filepath=filepath).first().id
+    submission = Submission.query.filter_by(filepath=filepath).first()
     try:
         file_data["html"] = convert_to_html(
-            content, Comment.query.filter(Comment.submission_id == submission_id).all()
+            content,
+            Comment.query.filter(Comment.submission_id == submission.id).all()
+            if not submission.showcase
+            else False,  # Show overall comments only if submission is not a showcase
         )
     except NotJSONError:
         return "Something went wrong while formatting"
-    if filepath.split(".")[1] == "py":
+
+    if filepath.split(".")[1] == "py":  # If Pyfile uploaded
         score, msgs = static_code_check(filepath)
         file_data["static"] = {"score": score, "msgs": msgs}
     return render_template(
         "evaluation.html",
         file=file_data,
         tags=Tag.query.all(),
+        submission=submission,
+        user=user_or_dummy(),
+        comments=Comment.query.filter_by(submission_id=submission.id).all(),
     )
 
 
@@ -72,7 +80,7 @@ def add_comment() -> str:
                 )
             )
         )
-        if "file" and "cell_id" in request.form:
+        if "file" in request.form:
             comment = Comment(
                 markdown=request.form["markdown"],
                 html=html,
@@ -82,8 +90,9 @@ def add_comment() -> str:
                 .first()
                 .id,
                 cell_id=request.form["cell_id"],
-                user_id=UserModel.get_by_token(session["token"]).id,
+                user=UserModel.get_by_token(session["token"]),
             )
+            # If not cell_id this is a general comment
             comment.save()
         else:
             return "Missing file or cell_id", 400
@@ -91,4 +100,4 @@ def add_comment() -> str:
         return "Missing markdown", 400
 
     comment_maker = get_template_attribute("_macros.html", "comment")
-    return comment_maker(html)
+    return comment_maker(comment)

@@ -1,5 +1,10 @@
 {%- extends 'classic/base.html.j2' -%}
+{% from '_macros.html' import showcase_identity with context %}
+<!-- Comments disables for showcase -->
 {% block input_group %}
+{%if resources.comments == false%}<!-- Comments disables for showcase -->
+{{ super() }}
+{%else%}
 {%set cellloop=loop%}
 <div class="card mt-3" id="{{cell.metadata.id if cell.metadata.id else loop.index}}">
     <div class="card-body">
@@ -31,4 +36,5 @@
         </small>
     </div>
 </div>
+{%endif%}
 {%- endblock input_group %}
