@@ -1,17 +1,17 @@
 {%- extends 'classic/base.html.j2' -%}
 {% block input_group %}
-<div class="card mt-3" id="{{cell.metadata.id}}">
+{%set cellloop=loop%}
+<div class="card mt-3" id="{{cell.metadata.id if cell.metadata.id else loop.index}}">
     <div class="card-body">
         {{ super() }}
     </div>
     <div class="card-footer ">
         <!-- <i class="far fa-comment float-right"role="button"></i> -->
         <div class="comment-open">
-            <ul class="list-group list-group-flush" id="comment-list-{{cell.metadata.id}}">
-
-                {%if resources.comments%}
+            <ul class="list-group list-group-flush" id="comment-list-{{cell.metadata.id if cell.metadata.id else loop.index}}">
+                {%if resources.comments != none%} <!-- No comments yet -->
                 {%for comment in resources.comments%}
-                {% if comment.cell_id==cell.metadata.id %}
+                {% if comment.cell_id==cell.metadata.id or comment.cell_id|int ==cellloop.index %}
                 <li class="list-group-item">
                     {{comment.html}}
                 </li>
@@ -20,8 +20,8 @@
                 {%endif%}
             </ul>
             <div class="form-outline">
-                <input class="form-control comment-box" id="comment-{{cell.metadata.id}}"></input>
-                <label class="form-label" for="comment-{{cell.metadata.id}}">+ Add your comment</label>
+                <input class="form-control comment-box" id="comment-{{cell.metadata.id if cell.metadata.id else loop.index}}"></input>
+                <label class="form-label" for="comment-{{cell.metadata.id if cell.metadata.id else loop.index}}">+ Add your comment</label>
             </div>
             <small class="text-muted d-flex justify-content-between">
                 <span role="button" class="post"> Post <i class="fas fa-level-down-alt fa-rotate-90"></i></span>
