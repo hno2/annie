@@ -35,11 +35,11 @@
     <section id="assignments">
         <div class="alert alert-primary" role="alert">Use this token for authentication <code id="auth_token">{{user.auth_token}}</code> </div>
         {% if user.assignments %}
-            {%for assignment in user.assignments %}
-                {{task_card(assignment.title,assignment.description,assignment.github, submissions=assignment.submissions)}}
-            {%endfor%}
+        {%for assignment in user.assignments %}
+        {{task_card(assignment.title,assignment.description,assignment.github, submissions=user.get_submissions_by_assignment(assignment))}}
+        {%endfor%}
         {%else%}
-            You currently have no assignments
+        You currently have no assignments
         {% endif %}
     </section>
     <section id="submissions">
