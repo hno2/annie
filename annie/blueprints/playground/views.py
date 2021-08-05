@@ -1,14 +1,14 @@
 from annie.blueprints.user.model import UserModel
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from annie.blueprints.playground.model import Showcase
+from annie.common import user_or_dummy
 
 playground = Blueprint("playground", __name__, template_folder="templates")
 
 
 @playground.route("/playground")
 def overview():
-    user = UserModel.get_by_token(session["token"])
-    print(user)
+    user = user_or_dummy()
     return render_template(
         "playground.html",
         showcases=Showcase,

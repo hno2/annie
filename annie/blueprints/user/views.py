@@ -1,7 +1,7 @@
 import os
 
 from flask.helpers import url_for
-
+from annie.common import user_or_dummy
 from annie.blueprints.user.model import Assignment, Submission, UserModel, db
 from flask import (
     Blueprint,
@@ -50,7 +50,7 @@ def upload(assignment):
             return "No user or no user authentication", 400
         user = UserModel.get_by_token(auth_token)
         assignment = Assignment.get_by_name(assignment)
-        autgrader_path = assignment.path
+        autograder_path = assignment.path
         if [el.assignment == assignment for el in user.submissions].count(
             True
         ) > assignment.max_submissions - 1:
@@ -76,11 +76,11 @@ def upload(assignment):
             user.save()
         else:
             return "Only Python or Python notebook files", 400
+    if autograder_path:
+        # Add Upload to Queue
+        from annie.blueprints.evaluation.tasks import evaluate_submission
 
-    # Add Upload to Queue
-    from annie.blueprints.evaluation.tasks import evaluate_submission
-
-    evaluate_submission(filename, autgrader_path, submission_id=submission_id)
+        evaluate_submission(filename, autograder_path, submission_id=submission_id)
     return "Uploaded and Added", 200
 
 
@@ -104,13 +104,7 @@ def launch(lti=lti):
 
 @user.route("/", methods=["GET", "POST"])
 def main():
-    if not "token" in session:
-        session["token"] = UserModel.get_by_id(1).auth_token  # Dummy User
-        flash("We will use a dummy user, as you have not logged in via a LTI Provider")
-    user = UserModel.get_by_token(session["token"])
-    if user is None:
-        abort(404, "No user with this Auth Token")
-    return render_template("index.html", user=user)
+    return render_template("index.html", user=user_or_dummy())
 
 
 @user.app_template_filter("timeago")
