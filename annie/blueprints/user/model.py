@@ -28,6 +28,12 @@ class UserModel(BaseMixin, db.Model):
     def get_by_id(cls, id):
         return UserModel.query.get(id)
 
+    def get_submissions_by_assignment(user, assignment):
+        return (
+            Submission.query.filter(Submission.user_id == user.id)
+            .filter(Submission.assignment_id == assignment.id)
+            .all()
+        )
 
 assigned = db.Table(
     "assigned",
