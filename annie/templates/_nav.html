@@ -10,21 +10,33 @@
     <div class="mt-4">
         <div id="header-content" class="pl-3">
             <h4>
-                <span style="white-space: nowrap;">{{session["email"]}}</span>
+                <span style="white-space: nowrap;">{{current_user["username"]}}</span>
             </h4>
-            <p>{{session["username"]}}</p>
+            {%if "token" in session%}
+            <p>Your Key: <code>{{session["token"]}}</code></p>
+            {%endif%}
         </div>
         <hr class="mb-0">
     </div>
     <div id="scrollContainer" class="ps ps--active-y" style="max-height: calc(100% - 243px); position: relative;">
         <ul class="sidenav-menu">
-            {% for task in session["tasks"]%}
+            {% for assignment in current_user["assignments"]%}
             <li class="sidenav-item">
                 <a class="sidenav-link ripple-surface" href="/" tabindex="1">
-                    <i class="fas {{"fa-check" if task==1}}{{"fa-times" if task==0}} fa-fw pr-3"></i>Task
-                    {{loop.index}}</a>
+                    <i class="fas fa-fw pr-3
+                    {%-if assignment.submissions and assignment.submissions[0].grade-%}
+                    True
+                    {{'fa-check' if assignment.submissions[0].grade.overall>50 else 'fa-times'}}
+                    {%-endif-%}"></i>
+                    {{assignment.title}}</a>
             </li>
             {%endfor%}
+        </ul>
+        <hr class="m-0">
+        <ul class="sidenav-menu">
+            <li class="sidenav-item">
+                <a href="{{url_for('playground.overview')}}" class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-shoe-prints pr-3"></i>Playground</a>
+            </li>
         </ul>
         <hr class="m-0">
         <ul class="sidenav-menu">
