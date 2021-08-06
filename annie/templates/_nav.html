@@ -21,12 +21,13 @@
     <div id="scrollContainer" class="ps ps--active-y" style="max-height: calc(100% - 243px); position: relative;">
         <ul class="sidenav-menu">
             {% for assignment in current_user["assignments"]%}
+                {%set cur_subs=current_user.get_submissions_by_assignment(assignment)%}
             <li class="sidenav-item">
                 <a class="sidenav-link ripple-surface" href="/" tabindex="1">
                     <i class="fas fa-fw pr-3
-                    {%-if assignment.submissions and assignment.submissions[0].grade-%}
-                    True
-                    {{'fa-check' if assignment.submissions[0].grade.overall>50 else 'fa-times'}}
+                    
+                    {%-if cur_subs and cur_subs[0].grade-%}
+                    {{'fa-check' if cur_subs[0].grade.overall>50 else 'fa-times'}}
                     {%-endif-%}"></i>
                     {{assignment.title}}</a>
             </li>
