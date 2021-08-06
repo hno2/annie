@@ -32,7 +32,7 @@ class UserModel(BaseMixin, db.Model):
         return (
             Submission.query.filter(Submission.user_id == user.id)
             .filter(Submission.assignment_id == assignment.id)
-            .all()
+            .order_by(Submission.created.desc()).all()
         )
 
 assigned = db.Table(
