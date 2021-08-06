@@ -42,7 +42,7 @@ Sorry there are no Showcases yet.
 {%- endmacro %}
 
 {% macro showcase_identity(showcase,editable=false, linked=true, comments=false) -%}
-<!-- comments: False - Do not display comments, None: No comments to display or [list] of comments to display-->
+<!-- comments: false - Do not display comments at all, None: No comments to display or [list] of comments to display-->
 <div class="card" id="{{showcase.id}}">
     <div class="card-body" style="position:relative">
         {% if linked %}
@@ -67,31 +67,39 @@ Sorry there are no Showcases yet.
 
         </div>
     </div>
-    {%if comments is not false%}
-    <div class="card-footer bg-light">
+    {% if comments %}
+    {{comments_block(comments,add=true)}}
+    {% endif %}
 
-        <!-- Do not display add comments-->
-        {%if comments is not none%}
-        {%for comment in comments%}
-        {{comment_block(comment)}}
-        {%endfor%}
-        {%endif%}
-        <div class="form-outline">
-            <input class="form-control comment-box" id="comment"></input>
-            <label class="form-label" for="comment">+ Add your comment</label>
-        </div>
-        <small>
-            <div class="float-right">
-                <span role="button" class="post"> Post <i class="fas fa-level-down-alt fa-rotate-90"></i></span></div>
-            <span class="text-muted description">
-                Comments support `inline code`, ```code blocks```, **bold** and _italic_ formatting</span>
-        </small>
-    </div>
-    {%endif%}
 </div>
 
 {%- endmacro %}
+{% macro comments_block(comments, add=false) -%}
+{%if comments is not false or comments is not none%}
+<div class="card-footer bg-light">
+    <!-- Display add comments and comments or no comment but add comments if none-->
+    <div class="comments-container">
+            {%for comment in comments%}
+                {{comment_block(comment)}}
+            {%endfor%}
+    </div>
+    {%if add%}
+    <!-- Display add comments-->
+    <div class="form-outline">
+        <input class="form-control comment-box" id="comment"></input>
+        <label class="form-label" for="comment">+ Add your comment</label>
+    </div>
+    <small>
+        <div class="float-right">
+            <span role="button" class="post"> Post <i class="fas fa-level-down-alt fa-rotate-90"></i></span></div>
+        <span class="text-muted description">
+            Comments support `inline code`, ```code blocks```, **bold** and _italic_ formatting</span>
+    </small>
+    {%endif%}
+</div>
+{%endif%}
 
+{%- endmacro %}
 {%- macro comment_block(comment)%}
 <div class="d-flex flex-start align-items-center">
     <img class="rounded-circle shadow-1-strong me-3" src="https://mdbootstrap.com/img/Photos/Avatars/img%20(19).jpg" alt="avatar" width="60" height="60" />

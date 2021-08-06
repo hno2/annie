@@ -48,15 +48,19 @@ def convert_to_html(content: str, comments=None) -> tuple[str, list[str]]:
         str: The HTML conversion of the Jupyter NB
         list[str]: List of Classification Results for each code cell
     """
-    if comments:
+    if comments and comments is not [] and comments is not None:
         comments = [com.__dict__ for com in comments]
-    print(comments)
+    else:
+        comments = None
+
     c = Config()
     c.TemplateExporter.template_file = (
         "annie/blueprints/evaluation/templates/notebook.html"
     )
     c.TemplateExporter.exclude_input_prompt = True
     c.HTMLExporter.exclude_anchor_links = True
+    c.CSSHTMLHeaderPreprocessor.highlight_class = "simon"
+    c.CSSHTMLHeaderPreprocessor.style = "monokai"
     nb = nbformat.reads(content, as_version=4)
     html_exporter = HTMLExporter(config=c)
     html_exporter.template_paths.append(
