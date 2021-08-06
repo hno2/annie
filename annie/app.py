@@ -6,6 +6,7 @@ from annie.blueprints.playground import playground
 from annie.blueprints.clippy import clippy
 
 from annie.extensions import db, dropzone
+from annie.common import user_or_dummy
 
 import os
 
@@ -64,6 +65,11 @@ def create_app(settings_override=None):
         from annie.blueprints.admin.model import admin
 
     admin.init_app(app)
+
+    @app.context_processor
+    def get_current_user():
+        return {"current_user": user_or_dummy()}
+
     return app
 
 
