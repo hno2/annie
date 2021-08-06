@@ -140,7 +140,10 @@ Sorry there are no Showcases yet.
 {% macro task_card(name, description,repository, submissions) -%}
 <div class="card">
     <h5 class="card-header d-flex justify-content-between align-items-center">{{name}}
-        {{grade_block(submissions[0].grade) if submissions}}</h5>
+        {% if submissions%}
+        {{grade_block(submissions[0].grade) if submissions[0].assignment.path is not none}}
+    {%endif%}</h5>
+
     <div class="card-body">
         <p class="card-text">
             {{description}}
