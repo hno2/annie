@@ -1,40 +1,19 @@
 {%- extends 'classic/base.html.j2' -%}
-{% from '_macros.html' import showcase_identity with context %}
+{% from '_macros.html' import comments_block with context %}
 <!-- Comments disables for showcase -->
 {% block input_group %}
 {%if resources.comments == false%}<!-- Comments disables for showcase -->
 {{ super() }}
 {%else%}
 {%set cellloop=loop%}
-<div class="card mt-3" id="{{cell.metadata.id if cell.metadata.id else loop.index}}">
+<div class="card my-3" id="{{cell.metadata.id if cell.metadata.id else loop.index}}">
     <div class="card-body">
         {{ super() }}
     </div>
-    <div class="card-footer ">
-        <!-- <i class="far fa-comment float-right"role="button"></i> -->
-        <div class="comment-open">
-            <ul class="list-group list-group-flush" id="comment-list-{{cell.metadata.id if cell.metadata.id else loop.index}}">
-                {%if resources.comments != none%} <!-- No comments yet -->
-                {%for comment in resources.comments%}
-                {% if comment.cell_id==cell.metadata.id or comment.cell_id|int ==cellloop.index %}
-                <li class="list-group-item">
-                    {{comment.html}}
-                </li>
-                {%endif%}
-                {%endfor%}
-                {%endif%}
-            </ul>
-            <div class="form-outline">
-                <input class="form-control comment-box" id="comment-{{cell.metadata.id if cell.metadata.id else loop.index}}"></input>
-                <label class="form-label" for="comment-{{cell.metadata.id if cell.metadata.id else loop.index}}">+ Add your comment</label>
-            </div>
-            <small class="text-muted d-flex justify-content-between">
-                <span role="button" class="post"> Post <i class="fas fa-level-down-alt fa-rotate-90"></i></span>
-                <span class="description">
-                    Comments support `inline code`, ```code blocks```, **bold** and _italic_ formatting</span>
-        </div>
-        </small>
-    </div>
+    {%if comments|length>0%}
+    {{comments_block(comments, add=false)}}
+    {%endif%}
+    
 </div>
 {%endif%}
 {%- endblock input_group %}
