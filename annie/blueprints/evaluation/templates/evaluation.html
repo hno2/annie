@@ -1,18 +1,16 @@
 {% from '_macros.html' import stars, showcase_identity with context %}
-
+{% from '_create_showcase.html' import create_showcase with context %}
 {% extends "_base.html" %}
 {% block content %}
 <main class="mt-5">
   <div class="container">
-
-
     <section id="welcome">
 
       {% if config["ENABLE_SHOWCASE"] and not submission.showcase and not submission.assignment.path%}
       <button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#showcase-modal">
         Ready to show it to others?
       </button>
-      {% include '_modal.html' %}
+      {{create_showcase(tags,uploaded=True)}}
       {% endif%}
     </section>
     <section id="evaluation">

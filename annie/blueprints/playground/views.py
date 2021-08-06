@@ -1,6 +1,7 @@
 from annie.blueprints.user.model import UserModel
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from annie.blueprints.playground.model import Showcase
+from annie.blueprints.playground.model import Showcase, Tag
+from annie.blueprints.user.model import Submission
 from annie.common import user_or_dummy
 
 playground = Blueprint("playground", __name__, template_folder="templates")
@@ -16,6 +17,7 @@ def overview():
         if request.args.get("filtered_by")
         else None,
         user=user,
+        tags=Tag.query.all(),
     )
 
 
@@ -32,13 +34,14 @@ def upvote():
         return "Request does not have a showcase_id param", 400
 
 
-@playground.route("/downvote", methods=["POST"])
 @playground.route("/add_showcase", methods=["POST"])
 def add_showcase():
-    # Check if tag in database or create it if not
     tags = request.form.getlist("tags[]")
     Showcase(
-        name=request.form["title"], description=request.form["description"], tags=tags
+        name=request.form["title"],
+        description=request.form["description"],
+        tags=tags,
+        submission=Submission.get_by_id(request.form["submission-id"]),
     ).save()
     flash("Sucessfully published your submision!", "success")
     return redirect(url_for("playground.overview"))

@@ -1,3 +1,4 @@
+{%macro create_showcase(tags,uploaded=true)%}
 <div class="modal" id="showcase-modal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -8,12 +9,19 @@
       <form action="{{url_for('playground.add_showcase')}}" method="POST" class="needs-validation" novalidate>
         <div class="modal-body">
           <ul class="stepper stepper-vertical" id="stepper-submit" data-mdb-stepper-linear="true" data-mdb-stepper-type="vertical">
-            <li class="stepper-step stepper-completed" id="upload">
+            <li class="stepper-step {{'stepper-completed' if uploaded else ''}}" id="upload">
               <div class="stepper-head" tabindex="0">
                 <span class="stepper-head-icon">1 </span>
-                <span class="stepper-head-text"> Upload Files <i class="fas fa-check-circle"></i></span>
+                <span class="stepper-head-text"> Upload Files 
+                  {%if uploaded-%}
+                  <i class="fas fa-check-circle"></i>
+                  {%endif-%}
               </div>
               <div class="stepper-content py-3">
+                {%if not uploaded%}
+                  <div class="dropzone"></div>
+                {%endif%}
+                <input type="text" class="d-none" name="submission-id" id="hidden-file" value="{{submission.id if submission}}">
               </div>
             </li>
             <!-- First step -->
@@ -73,9 +81,10 @@
           <button type="button" class="btn btn-outline-secondary" data-mdb-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-primary">Show the world!</button>
+          <button type="submit" id="submit" class="btn btn-primary">Show the world!</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+{%endmacro -%}

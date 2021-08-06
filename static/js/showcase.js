@@ -45,3 +45,23 @@ $(".pointer").on("click", function () {
         $(this).removeClass("pointer").addClass("text-primary");
     });
 });
+
+// Only if on Playground Page
+Dropzone.autoDiscover = false;
+$('#showcase-modal').on('shown.bs.modal', function (e) {
+    let $target = $(".dropzone")
+    if (!$target[0].dropzone) {
+        $target.dropzone({
+            url: "/upload/Into%20the%20wild", // Add it to the Into the wild assignment TODO: Make this configurable
+            init: function () {
+                this.on("success", function (file, response) {
+                    $("#hidden-file").val(response);
+                })
+                this.on("error", function (file, response) {
+                    $("#submit").attr("disabled", true);
+                })
+
+            }
+        });
+    }
+}); // Prevent sending if there has been an error!

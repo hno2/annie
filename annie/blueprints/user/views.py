@@ -81,7 +81,7 @@ def upload(assignment):
         from annie.blueprints.evaluation.tasks import evaluate_submission
 
         evaluate_submission(filename, autograder_path, submission_id=submission_id)
-    return "Uploaded and Added", 200
+    return str(submission_id), 200
 
 
 @user.route("/launch", methods=["GET", "POST"])

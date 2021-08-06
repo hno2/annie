@@ -1,9 +1,29 @@
 {% extends "_base.html" %}
 {% from '_macros.html' import showcase_block,flash_message with context %}
+{% from '_create_showcase.html' import create_showcase with context%}
+<!-- Prep dropzone if user wants to upload his own playground submission-->
+{%block custom_css%}
+{{ dropzone.load_css() }}
+<style>
+    .dropzone {
+        border: 2px dashed #1266f1;
+        min-height: 200px;
+    }
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}">
+{%endblock custom_css%}
+
+
+
 {% block content %}
 <div class="container mt-5"> 
-  {{flash_message()}}
+  {{flash_message()}}      
+  <button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#showcase-modal">
+    Ready to show it to others?
+  </button>
+  {{create_showcase(tags,uploaded=False)}}
   {%if filtered%}
+  
   <section id="search">
     <h4>Filtered by Tag <span class="badge rounded-pill bg-secondary">{{filtered}}<a href="/playground" class="btn-close btn-close-white ms-2" aria-label="Close"></a></span></h4>
     {{showcase_block(showcases.get_by_tag(filtered))}}
@@ -22,5 +42,7 @@
 </div class="container">
 {% endblock content%}
 {%block custom_js%}
+<script type="text/javascript" src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+{{ dropzone.load_js() }}
 <script type="text/javascript" src="{{ url_for('static', filename='js/showcase.js') }}"></script>
 {%endblock%}
