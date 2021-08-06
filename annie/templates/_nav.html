@@ -25,9 +25,8 @@
             <li class="sidenav-item">
                 <a class="sidenav-link ripple-surface" href="/" tabindex="1">
                     <i class="fas fa-fw pr-3
-                    
                     {%-if cur_subs and cur_subs[0].grade-%}
-                    {{'fa-check' if cur_subs[0].grade.overall>50 else 'fa-times'}}
+                    {{' fa-check' if cur_subs[0].grade.overall>50 else ' fa-times'}}
                     {%-endif-%}"></i>
                     {{assignment.title}}</a>
             </li>
