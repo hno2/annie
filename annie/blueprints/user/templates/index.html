@@ -23,7 +23,9 @@
                     feedback.</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
                     <a href="#assignments" type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Start Now</a>
+                    {%if "return_url" in session%}
                     <a href='{{session["return_url" if "return_url" in session]}}' type="button" class="btn btn-outline-secondary btn-lg px-4">Go Back</a>
+                    {%endif%}
                 </div>
             </div>
             <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
