@@ -16,6 +16,7 @@ from pylti.flask import lti
 import shortuuid
 from werkzeug.utils import redirect, secure_filename
 import timeago, datetime
+import urllib
 
 user = Blueprint("user", __name__, template_folder="templates")
 
@@ -48,8 +49,8 @@ def upload(assignment):
             session["token"] = auth_token
         else:
             return "No user or no user authentication", 400
-        user = UserModel.get_by_token(auth_token)
-        assignment = Assignment.get_by_name(assignment)
+        user = UserModel.get_by_token_or_404(auth_token)
+        assignment = Assignment.get_by_name(urllib.parse.unquote(assignment))
         autograder_path = assignment.path
         if [el.assignment == assignment for el in user.submissions].count(
             True

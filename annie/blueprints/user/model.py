@@ -21,6 +21,12 @@ class UserModel(BaseMixin, db.Model):
         return UserModel.query.filter(UserModel.username == username).first()
 
     @classmethod
+    def get_by_token_or_404(cls, token):
+        return UserModel.query.filter(UserModel.auth_token == token).first_or_404(
+            description="User not found"
+        )
+
+    @classmethod
     def get_by_token(cls, token):
         return UserModel.query.filter(UserModel.auth_token == token).first()
 
@@ -32,8 +38,10 @@ class UserModel(BaseMixin, db.Model):
         return (
             Submission.query.filter(Submission.user_id == user.id)
             .filter(Submission.assignment_id == assignment.id)
-            .order_by(Submission.created.desc()).all()
+            .order_by(Submission.created.desc())
+            .all()
         )
+
 
 assigned = db.Table(
     "assigned",
