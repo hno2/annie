@@ -38,6 +38,20 @@ def error(exception=None):
     return str(exception)
 
 
+@user.get("/view_assignment/<assignment>")
+def view_assignment(assignment):
+    """view assignment
+    :param assignment: the assignment name
+    :return: the view_assignment.html template rendered
+    """
+
+    assignment = Assignment.get_by_name(urllib.parse.unquote(assignment))
+    submissions = user_or_dummy().get_submissions_by_assignment(assignment)
+    return render_template(
+        "assignment.html", submissions=submissions, assignment=assignment
+    )
+
+
 @user.route("/upload/<assignment>", methods=["GET", "POST"])
 def upload(assignment):
     if request.method == "POST":

@@ -122,7 +122,7 @@ Sorry there are no Showcases yet.
 {% set mapping = {"Success": "bg-success", "In Progress": "bg-info", "Failed":"bg-warning"} -%}
 
 {%if grade%}
-{%if grade.overall>50%}
+{%if grade.overall>threshold%}
 {%set status="Success"%}
 {%else%}
 {%set status="Failed"%}
@@ -137,37 +137,82 @@ Sorry there are no Showcases yet.
     <span class="visually-hidden">grade</span></span>
 {%endif%}
 {%- endmacro %}
+
+{% macro grade_dot(grade,threshold=50) -%}
+
+{% set mapping = {"Success": "text-success", "In Progress": "text-info", "Failed":"text-warning"} -%}
+{%if grade%}
+{%if grade.overall>threshold%}
+{%set status="Success"%}
+{%else%}
+{%set status="Failed"%}
+{%endif%}
+{%else%}
+{%set status="In Progress"%}
+{%endif%}
+
+{%if grade%}
+<i class="fas fa-dot-circle {{mapping[status]}}"></i>
+{%endif%}
+{%- endmacro %}
+
+
+{%- macro submission_table(submissions, showcase=False) -%}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Assignment</th>
+            <th scope="col">Date</th>
+            <th scope="col">Score</th>
+            <th scope="col">Code</th>
+            {%if showcase%}
+            <th scope="col">Published</th>
+            {%endif%}
+        </tr>
+        </thead>
+        <tbody>
+    {%for submission in submissions%}
+    <tr>
+        <td>{{submission.filepath.split(".")[0][0:5]}}</td>
+        <td>{{submission.assignment.title}}</td>
+        <td><time datetime="{{submission.created}}">{{submission.created|timeago}} </time></td>
+        <td>{{submission.grade.overall}} {{grade_dot(submission.grade)}}</i></td>
+        <td><a href="/review/{{submission.filepath}}" type="button" class="btn btn-light btn-rounded">View</button></td>
+        {%if showcase%}
+        <td> {%if submission.showcase%}
+            <i class="fas fa-check"></i>
+        {%endif%}
+    </td>
+        {%endif%}
+    </tr>
+    {%endfor%}
+    </tbody>
+    </table>
+{%- endmacro -%}
+
 {% macro task_card(name, description,repository, submissions) -%}
 <div class="card" id="{{name}}">
-    <h5 class="card-header d-flex justify-content-between align-items-center">{{name}}
+    <a href="/view_assignment/{{name}}">
+    <h5 class="card-header d-flex justify-content-between align-items-center text-body">{{name}}
         {% if submissions%}
         {{grade_block(submissions[0].grade) if submissions[0].assignment.path is not none}}
     {%endif%}</h5>
+    </a>
 
-    <div class="card-body">
-        <p class="card-text">
+    <div class="card-body card-text">
             {{description}}
             {%if submissions %}
             <hr>
-            <a href="/review/{{submissions[0].filepath}}" class="btn btn-primary">Review Submission</a>
+            <a href="/review/{{submissions[0].filepath}}" class="btn btn-light btn-rounded">View latest submission</a>
             {%endif%}
-        </p>
-        <a href="https://colab.research.google.com/github/{{repository}}" target="_blank"><span class="badge bg-warning text-dark">
-                <i class="fas fa-infinity"></i> Open in Colab</span></a>
-        <a href="https://www.github.com/{{repository}}" target="_blank"><span class="badge bg-success ms-2 me-5"><i class="fas fa-download fa-lg"></i>
-                Download</span></a>
     </div>
     <div class="card-footer text-muted">
-        You can either submit your solution directly from Colab or
-        <!-- Buttons trigger collapse -->
-        <a data-mdb-toggle="collapse" href="#upload-{{name|replace(' ' ,'')}}" role="button" aria-expanded="false" aria-controls="upload-{{name|replace(' ' ,'')}}">
-            Upload it here
-        </a>
-        </p>
-        <!-- Collapsed content -->
-        <div class="collapse mt-3" id="upload-{{name|replace(' ' ,'')}}">
-            {{ dropzone.create(id=name, action="/upload/"+name) }}
-        </div>
+        <a href="https://colab.research.google.com/github/{{repository}}" target="_blank"><span class="badge bg-info">
+            <i class="fas fa-infinity"></i> Open in Colab</span></a>
+    <a href="https://www.github.com/{{repository}}" target="_blank"><span class="badge bg-info ms-2 me-5"><i class="fas fa-download fa-lg"></i>
+            Download</span></a>
+
     </div>
 
 </div>

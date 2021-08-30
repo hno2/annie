@@ -1,0 +1,47 @@
+{% from '_macros.html' import submission_table%}
+{% extends "_base.html" %}
+
+{%block custom_css%}
+{{ dropzone.load_css() }}
+<style>
+    .dropzone {
+        border: 2px dashed white;
+        min-height: 200px;
+        background-color: transparent;
+    }
+</style>
+{%endblock custom_css%}
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{assignment.title}}</li>
+        </ol>
+      </nav>
+      <h2>{{assignment.title}} <small>Due: Data</small></h2> 
+
+      <section id="details">{{assignment.description}}
+      </section>
+
+      <hr>
+      <section id="upload">
+        <a data-mdb-toggle="collapse" href="#upload-{{assignment.title|replace(' ' ,'')}}" role="button" aria-expanded="false" aria-controls="upload-{{assignment.title|replace(' ' ,'')}}">
+        <div class="alert alert-dark" role="alert"><i class="fas fa-file-upload"></i> Create a new submission  
+        
+    </a>
+        <div class="collapse mt-3" id="upload-{{assignment.title|replace(' ' ,'')}}">
+            {{ dropzone.create(id=assignment.title, action="/upload/"+assignment.title) }}
+        </div></div>
+      </section>
+      <section id="submissions">
+      <h3>Submission</h3>
+        {{submission_table(submissions)}}
+    </section>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+{{ dropzone.load_js() }}
+{{ dropzone.config(custom_options="success: function(file, response){console.log(response);}") }}
+{%endblock%}
