@@ -55,6 +55,7 @@ class Assignment(BaseMixin, db.Model):
     title = db.Column(db.String(40), nullable=False)
     github = db.Column(db.String(40))
     description = db.Column(db.String(80))
+    due_date = db.Column(db.DateTime)
     users = db.relationship(
         "UserModel",
         secondary=assigned,

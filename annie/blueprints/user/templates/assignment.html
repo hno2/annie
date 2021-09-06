@@ -19,8 +19,10 @@
           <li class="breadcrumb-item active" aria-current="page">{{assignment.title}}</li>
         </ol>
       </nav>
-      <h2>{{assignment.title}} <small>Due: Data</small></h2> 
-
+      <h2>{{assignment.title}}</h2> <h5>
+        {%if assignment.due_date%}
+        <span class="small text-muted">Due: {{assignment.due_date|timeago}} &middot; {{assignment.due_date|formattime}} </span></h5>
+        {%endif%}
       <section id="details">{{assignment.description}}
       </section>
 

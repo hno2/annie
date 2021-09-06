@@ -1,4 +1,4 @@
-{% from '_macros.html' import task_card,gradeblock,submission_table, flash_message with context%}
+{% from '_macros.html' import assignment_card,gradeblock,submission_table, flash_message with context%}
 {% extends "_base.html" %}
 {%block custom_css%}
 {{ dropzone.load_css() }}
@@ -38,7 +38,7 @@
         <div class="alert alert-dark" role="alert">Use this token for authentication <code id="auth_token">{{user.auth_token}}</code> </div>
         {% if user.assignments %}
         {%for assignment in user.assignments %}
-        {{task_card(assignment.title,assignment.description,assignment.github, submissions=user.get_submissions_by_assignment(assignment))}}
+        {{assignment_card(assignment, submissions=user.get_submissions_by_assignment(assignment))}}
         {%endfor%}
         {%else%}
         You currently have no assignments
