@@ -198,8 +198,8 @@ Sorry there are no Showcases yet.
 {%- endmacro -%}
 
 {% macro assignment_card(assignment, submissions) -%}
-<div class="card" id="{{assignment.name}}">
-    <a href="/view_assignment/{{assignment.name}}">
+<div class="card" id="{{assignment.title}}">
+    <a href="/view_assignment/{{assignment.title}}">
     <h5 class="card-header d-flex justify-content-between align-items-center text-body">{{assignment.title}}
         {%if assignment.due_date%}
         <small class="text-muted">due {{assignment.due_date|timeago}} </small>
