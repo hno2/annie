@@ -569,3 +569,7 @@
 .select2-container--open {
     z-index: 9999999
 }
+
+#sidenav a.active {
+    background-color: rgba(38, 38, 38, .05)
+}

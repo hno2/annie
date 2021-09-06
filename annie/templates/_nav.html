@@ -23,7 +23,7 @@
             {% for assignment in current_user["assignments"]%}
                 {%set cur_subs=current_user.get_submissions_by_assignment(assignment)%}
             <li class="sidenav-item">
-                <a class="sidenav-link ripple-surface" href="/#{{assignment.title}}" tabindex="1">
+                <a class="sidenav-link ripple-surface {{'active' if request.view_args.get('assignment') == assignment.title }}" href="/view_assignment/{{assignment.title}}" tabindex="1">
                     <i class="fas fa-fw pr-3
                     {%-if cur_subs and cur_subs[0].grade-%}
                     {{' fa-check' if cur_subs[0].grade.overall>50 else ' fa-times'}}
@@ -35,7 +35,7 @@
         <hr class="m-0">
         <ul class="sidenav-menu">
             <li class="sidenav-item">
-                <a href="{{url_for('playground.overview')}}" class="sidenav-link ripple-surface" tabindex="1"> <i class="fas fa-shoe-prints pr-3"></i>Playground</a>
+                <a href="{{url_for('playground.overview')}}" class="sidenav-link ripple-surface {{'active' if request.endpoint.endswith('playground.overview') }}" tabindex="1"> <i class="fas fa-shoe-prints pr-3"></i>Playground</a>
             </li>
         </ul>
         <hr class="m-0">
