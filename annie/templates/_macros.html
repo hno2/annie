@@ -157,7 +157,8 @@ Sorry there are no Showcases yet.
 {%- endmacro %}
 
 
-{%- macro submission_table(submissions, showcase=False) -%}
+{%- macro submission_table(submissions, showcase=False) -%} 
+{%if submissions%}
     <table class="table">
         <thead>
         <tr>
@@ -189,6 +190,11 @@ Sorry there are no Showcases yet.
     {%endfor%}
     </tbody>
     </table>
+ {%else%}
+ <p class="note note-info">
+    Please submit your first notebook, then you can view all your submissions here.
+  </p>
+  {%endif%}
 {%- endmacro -%}
 
 {% macro task_card(name, description,repository, submissions) -%}
