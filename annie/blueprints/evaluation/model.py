@@ -1,6 +1,6 @@
 from annie.extensions import db, BaseMixin
 from sqlalchemy.event import listens_for
-import numpy as np
+from statistics import mean
 
 
 class Grade(BaseMixin, db.Model):
@@ -32,7 +32,7 @@ def _update_overall(mapper, connection, target):
     for grade in [target.ai, target.static, target.peer, target.manual]:
         if grade is not None:
             all_grades.append(grade)
-    target.overall = int(np.mean(all_grades))
+    target.overall = int(mean(all_grades))
 
 
 class Comment(BaseMixin, db.Model):
