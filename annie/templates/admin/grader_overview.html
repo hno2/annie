@@ -1,0 +1,48 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h3 class="mt-4">Hello to grading!</h3>
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Assignment</th>
+                <th scope="col">To Grade</th>
+                <th scope="col">Link</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment, value in assignments.items()%}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{assignment}}</td>
+                <td>{{value["count_todo"]}}/{{value["count_total"]}}
+                    {%set percentage=(1-value["count_todo"]/value["count_total"])*100 if value["count_total"]>0 else 1 %}
+                    <div class="progress">
+                        <div
+                          class="progress-bar"
+                          role="progressbar"
+                          style="width:{{percentage}}%;"
+                          aria-valuenow="{{percentage}}"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        ></div>
+                      </div>
+                </td>
+                <td>
+                {%if value["gradeable"]%}
+                    <a href="/grader/{{assignment}}/" type="button" class="btn btn-light btn-rounded {{'disabled' if value["count_todo"] == 0}}"  >Start</button>
+                {%else%}
+                <span class="text-warning">No Master Notebook</span>
+                {%endif%}
+                    </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

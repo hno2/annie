@@ -26,9 +26,9 @@ pd = Assignment(
 )
 itw.save()
 pd.save()
-gradeone = Grade(static=90, overall=90)
-gradetwo = Grade(static=60, overall=60)
-gradethree = Grade(static=10, overall=10)
+gradeone = Grade(static=90)
+gradetwo = Grade(static=60)
+gradethree = Grade(static=10)
 
 subone = Submission(assignment=pd, grade=gradeone, filepath="example.ipynb")
 subtwo = Submission(assignment=pd, grade=gradetwo, filepath="example2.ipynb")
@@ -56,9 +56,12 @@ Showcase(
     tags=["clustering", "transformers", "nlp"],
 ).save()
 
+subnograde = Submission(assignment=pd, filepath="4hnzKz7YFqmkMjv8kgRkxe.ipynb").save()
+
 test_user = {
     "username": "Dummy User",
     "assignments": [itw, pd],
+    "submissions": [subnograde],
 }
 user = UserModel(**test_user).save()
 

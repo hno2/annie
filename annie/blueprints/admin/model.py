@@ -1,10 +1,13 @@
-from sqlalchemy.event import listens_for
-from flask_admin.contrib.sqla import ModelView
-from flask_admin import Admin, form
-from annie.blueprints.user.model import UserModel, Assignment, Submission
-from flask import current_app
-from annie.extensions import db
+import json
+
 from annie.blueprints.playground.model import Showcase
+from annie.blueprints.user.model import Assignment, Submission, UserModel
+from annie.blueprints.evaluation.model import Comment, Grade
+from annie.extensions import db
+from flask import current_app, redirect
+from flask_admin import Admin, form
+from flask_admin.contrib.sqla import ModelView
+from sqlalchemy.event import listens_for
 
 
 class FileView(ModelView):
@@ -31,9 +34,58 @@ class FileView(ModelView):
 #             current_app.config["UPLOAD_FOLDER"] + "/asåsignments/master/" + value
 #         )
 
+from flask_admin import BaseView, expose
 
-admin = Admin(name="Annie", template_mode="bootstrap4")
-admin.add_view(ModelView(UserModel, db.session, name="Users"))
-admin.add_view(FileView(Assignment, db.session, name="Assignment"))
-admin.add_view(ModelView(Submission, db.session, name="Submissions"))
-admin.add_view(ModelView(Showcase, db.session, name="Showcases"))
+
+class MyIndexView(BaseView):
+    def __init__(self, *args, **kwargs):
+        super(MyIndexView, self).__init__(*args, **kwargs)
+        self.static_folder = "static"
+        self.endpoint = "admin"
+        self.name = "Home"
+
+    @expose("/")
+    def index(self):
+        return self.render(
+            "/admin/index.html",
+            n_subs=Submission.query.count(),
+            n_coms=Comment.query.count(),
+            n_show=Showcase.query.count(),
+            n_ungraded=Submission.get_all_without_grade(),
+        )
+
+
+class GraderView(BaseView):
+    def filter_ungraded(self, submissions: list[Submission]):
+        return [s for s in submissions if s.grade is None]
+
+    @expose("/")
+    def index(self):
+        # Get all assignments
+        assignment_dict = {}
+        # count all assignments
+
+        for assignment in Assignment.query.all():
+
+            assignment_dict[assignment.title] = {
+                "count_total": len(assignment.submissions),
+                "count_todo": len(self.filter_ungraded(assignment.submissions)),
+                "gradeable": True if assignment.master_nb else False,
+                "percentag_done": 15,
+            }
+        return self.render("admin/grader_overview.html", assignments=assignment_dict)
+
+
+admin = Admin(
+    name="Annie", template_mode="bootstrap4", index_view=MyIndexView(url="/admin")
+)
+admin.add_view(ModelView(UserModel, db.session, name="Users", category="Raw Data"))
+admin.add_view(FileView(Assignment, db.session, name="Assignment", category="Raw Data"))
+admin.add_view(
+    ModelView(Submission, db.session, name="Submissions", category="Raw Data")
+)
+admin.add_view(ModelView(Showcase, db.session, name="Showcases", category="Raw Data"))
+admin.add_view(ModelView(Comment, db.session, name="Comments", category="Raw Data"))
+admin.add_view(ModelView(Grade, db.session, name="Grades", category="Raw Data"))
+if current_app.config["ENABLE_GRADER"]:
+    admin.add_view(GraderView(name="Grader", endpoint="graderoverview"))

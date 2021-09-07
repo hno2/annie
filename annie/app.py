@@ -1,14 +1,16 @@
-from flask import Flask
-from celery import Celery
-from annie.blueprints.evaluation import evaluation
-from annie.blueprints.user import user
-from annie.blueprints.playground import playground
-from annie.blueprints.clippy import clippy
-
-from annie.extensions import db, dropzone
-from annie.common import user_or_dummy
-
 import os
+import sys
+from typing import *
+
+from celery import Celery
+from flask import Flask
+
+
+from annie.blueprints.evaluation import evaluation
+
+from annie.blueprints.user import user
+from annie.common import user_or_dummy
+from annie.extensions import db, dropzone
 
 
 def create_celery_app(app: Flask = None) -> Celery:
@@ -41,6 +43,7 @@ def create_app(settings_override=None):
     :param settings_override: Override settings
     :return: Flask app
     """
+
     app = Flask(__name__, static_folder="../static", static_url_path="")
 
     app.config.from_object("config.settings")
@@ -58,12 +61,23 @@ def create_app(settings_override=None):
     app.register_blueprint(evaluation)
     app.register_blueprint(user)
     if app.config["ENABLE_SHOWCASE"]:
+        from annie.blueprints.playground import playground
+
         app.register_blueprint(playground)
+
     if app.config["ENABLE_CLIPPY"]:
+        from annie.blueprints.clippy import clippy
+
         app.register_blueprint(clippy)
+    if app.config["ENABLE_GRADER"]:
+        sys.path.insert(0, os.getcwd() + "/grader/")
+        sys.path.insert(0, os.getcwd() + "/grader/lama_grading_helper")
+        from annie.blueprints.grader.views import grader
+
+        app.register_blueprint(grader)
+
     with app.app_context():
         from annie.blueprints.admin.model import admin
-
     admin.init_app(app)
 
     @app.context_processor

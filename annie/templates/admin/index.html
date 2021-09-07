@@ -1,0 +1,75 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h3 class="mt-4">Welcome to the review panel!</h3>
+<div class="row">
+  <div class="col-xl-3 col-sm-6 col-12 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between px-md-1">
+          <div class="align-self-center">
+            <i class="fas fa-clipboard-list text-danger fa-3x"></i>
+          </div>
+          <div class="text-end">
+            <h3>{{n_ungraded}}</h3>
+            <p class="mb-0">Submissions to grade</p>
+            <a href="{{url_for('graderoverview.index')}}" class="stretched-link">Let's Grade</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 col-12 mb-4">
+
+    <div class="card">
+
+      <div class="card-body">
+        <div class="d-flex justify-content-between px-md-1">
+          <div class="align-self-center">
+            <i class="fas fa-pencil-alt text-info fa-3x"></i>
+          </div>
+          <div class="text-end">
+            <h3>{{n_subs}}</h3>
+            <p class="mb-0">Submissions</p>
+            <a href="{{url_for('submission.index_view')}}" class="stretched-link">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 col-12 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between px-md-1">
+            <div class="align-self-center">
+              <i class="far fa-comment-alt text-warning fa-3x"></i>
+            </div>
+            <div class="text-end">
+              <h3>{{n_coms}}</h3>
+              <p class="mb-0">Comments</p>
+              <a href="{{url_for('comment.index_view')}}" class="stretched-link">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 col-12 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between px-md-1">
+          <div class="align-self-center">
+            <i class="fas fa-shoe-prints text-success fa-3x"></i>
+          </div>
+          <div class="text-end">
+            <h3>{{n_show}}</h3>
+            <p class="mb-0">Showcases</p>
+            <a href="{{url_for('showcase.index_view')}}" class="stretched-link">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
