@@ -10,4 +10,5 @@ RUN pip install --no-deps -r no-deps.txt
 RUN flask db reset 
 
 EXPOSE 8000
+LABEL org.opencontainers.image.source https://github.com/hno2/annie
 ENTRYPOINT [ "gunicorn", "--workers=2","-b","0.0.0.0:8000", "annie.app:create_app()"]
