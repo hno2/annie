@@ -11,6 +11,7 @@ from flask import (
     request,
     session,
     flash,
+    send_from_directory,
 )
 from pylti.flask import lti
 import shortuuid
@@ -65,7 +66,7 @@ def upload(assignment):
             return "No user or no user authentication", 400
         user = UserModel.get_by_token_or_404(auth_token)
         assignment = Assignment.get_by_name(urllib.parse.unquote(assignment))
-        autograder_path = assignment.path
+        autograder_path = assignment.autograder_path
         if [el.assignment == assignment for el in user.submissions].count(
             True
         ) > assignment.max_submissions - 1:
@@ -122,6 +123,31 @@ def main():
     return render_template("index.html", user=user_or_dummy())
 
 
+@user.get("/download/<path:filename>")
+def download_file(filename):
+    print(
+        os.path.join(
+            os.getcwd(),
+            current_app.config["UPLOAD_FOLDER"] + "/assignments/student/" + filename,
+        )
+    )
+    return send_from_directory(
+        os.path.join(
+            os.getcwd(), current_app.config["UPLOAD_FOLDER"] + "/assignments/student/"
+        ),
+        filename,
+        as_attachment=True,
+    )
+
+
 @user.app_template_filter("timeago")
 def fromnow(date):
     return timeago.format(date, datetime.datetime.now())
+
+
+@user.app_template_filter("formattime")
+def format_datetime(value, format="%d %b  %H:%M"):
+    """Format a date time to (Default): d Mon YYYY HH"""
+    if value is None:
+        return ""
+    return value.strftime(format)

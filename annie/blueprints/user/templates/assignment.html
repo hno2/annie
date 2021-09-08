@@ -1,4 +1,4 @@
-{% from '_macros.html' import submission_table%}
+{% from '_macros.html' import submission_table, grade_block%}
 {% extends "_base.html" %}
 
 {%block custom_css%}
@@ -12,29 +12,63 @@
 </style>
 {%endblock custom_css%}
 {% block content %}
-<div class="container">
+<div class="container my-2">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/">Home</a></li>
       <li class="breadcrumb-item active" aria-current="page">{{assignment.title}}</li>
     </ol>
   </nav>
-  <h2>{{assignment.title}}</h2>
-  <h5>
-    {%if assignment.due_date%}
-    <span class="small text-muted">Due: {{assignment.due_date|timeago}} &middot; {{assignment.due_date|formattime}} </span></h5>
-  {%endif%}
+  <div class="row">
+    <div class="col-md-8">
+      <h2>{{assignment.title}}</h2>
+      <h5>
+        {%if assignment.due_date%}
+        <span class="small text-muted">Due: {{assignment.due_date|timeago}} &middot; {{assignment.due_date|formattime}} </span></h5>
+      {%endif%}
+    </div>
+    <div class="col-md-2">
+      <div class="border rounded-3 py-2">
+        <div class="grade text-center">
+          <h6 class="mt-2">Grade</h6>
+          {% if submissions%}
+          {{grade_block(submissions[0].grade) if submissions[0].assignment.path is not none}}
+          {%endif%}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="border rounded-3 py-2">
+        <div class="download text-center">
+          <h6>Download or Start</h6>
+          {%if assignment.github%}
+          <a href="https://colab.research.google.com/github/{{assignment.github}}" target="_blank">
+            <span class="badge bg-info my-2">
+              <i class="fas fa-infinity"></i> Open in Colab
+            </span>
+          </a>
+          {%endif%}
+          {%if assignment.student_nb%}
+          <a href="/download/{{assignment.student_nb}}" target="_blank">
+            <span class="badge bg-info"><i class="fas fa-download fa-lg"></i>Download
+            </span>
+          </a>
+          {%endif%}
+        </div>
+      </div>
+    </div>
+  </div>
   <section id="details">{{assignment.description}}
   </section>
-
   <hr>
   <section id="upload">
-    
-      <div class="note note-success" role="alert">
-        <a data-mdb-toggle="collapse" href="#upload-{{assignment.title|replace(' ' ,'')}}" role="button" aria-expanded="false" aria-controls="upload-{{assignment.title|replace(' ' ,'')}}" class="link-dark">
-        <div class="top"><i class="fas fa-file-upload"></i> Create a new submission</a>
- 
-        </div>
+
+    <div class="note note-success" role="alert">
+      <a data-mdb-toggle="collapse" href="#upload-{{assignment.title|replace(' ' ,'')}}" role="button" aria-expanded="false" aria-controls="upload-{{assignment.title|replace(' ' ,'')}}" class="link-dark">
+        <div class="top"><i class="fas fa-file-upload"></i> Create a new submission
+      </a>
+
+    </div>
 
     <div class="collapse mt-3" id="upload-{{assignment.title|replace(' ' ,'')}}" will-change="transform">
       {{ dropzone.create(id=assignment.title, action="/upload/"+assignment.title) }}
@@ -50,5 +84,5 @@
 
 {% block custom_js %}
 {{ dropzone.load_js() }}
-{{ dropzone.config(custom_options="success: function(file, response){location.reload()}") }}
+{{ dropzone.config(redirect_url=url_for(request.endpoint, assignment=assignment)) }}
 {%endblock%}
