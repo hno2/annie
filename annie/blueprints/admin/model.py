@@ -55,27 +55,6 @@ class MyIndexView(BaseView):
         )
 
 
-class GraderView(BaseView):
-    def filter_ungraded(self, submissions: list[Submission]):
-        return [s for s in submissions if s.grade is None]
-
-    @expose("/")
-    def index(self):
-        # Get all assignments
-        assignment_dict = {}
-        # count all assignments
-
-        for assignment in Assignment.query.all():
-
-            assignment_dict[assignment.title] = {
-                "count_total": len(assignment.submissions),
-                "count_todo": len(self.filter_ungraded(assignment.submissions)),
-                "gradeable": True if assignment.master_nb else False,
-                "percentag_done": 15,
-            }
-        return self.render("admin/grader_overview.html", assignments=assignment_dict)
-
-
 admin = Admin(
     name="Annie", template_mode="bootstrap4", index_view=MyIndexView(url="/admin")
 )
@@ -87,5 +66,29 @@ admin.add_view(
 admin.add_view(ModelView(Showcase, db.session, name="Showcases", category="Raw Data"))
 admin.add_view(ModelView(Comment, db.session, name="Comments", category="Raw Data"))
 admin.add_view(ModelView(Grade, db.session, name="Grades", category="Raw Data"))
+
 if current_app.config["ENABLE_GRADER"]:
+
+    class GraderView(BaseView):
+        def filter_ungraded(self, submissions: list[Submission]):
+            return [s for s in submissions if s.grade is None]
+
+        @expose("/")
+        def index(self):
+            # Get all assignments
+            assignment_dict = {}
+            # count all assignments
+
+            for assignment in Assignment.query.all():
+
+                assignment_dict[assignment.title] = {
+                    "count_total": len(assignment.submissions),
+                    "count_todo": len(self.filter_ungraded(assignment.submissions)),
+                    "gradeable": True if assignment.master_nb else False,
+                    "percentag_done": 15,
+                }
+            return self.render(
+                "admin/grader_overview.html", assignments=assignment_dict
+            )
+
     admin.add_view(GraderView(name="Grader", endpoint="graderoverview"))
