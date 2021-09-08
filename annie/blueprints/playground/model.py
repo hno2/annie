@@ -36,7 +36,6 @@ class Showcase(BaseMixin, db.Model):
     __tablename__ = "showcases"
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    # Maybe instead of a number score, the score will be user_ids of the users who upvoted. Score is then calculated by the number of users who upvoted. Or in User Model ids of upvoted
     score = db.Column(db.Integer, nullable=False, default=0)
     submission = db.relationship(
         Submission,
@@ -96,7 +95,6 @@ class Showcase(BaseMixin, db.Model):
 
 class Tag(BaseMixin, db.Model):
     __tablename__ = "tags"
-    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
 
     def __repr__(self):
