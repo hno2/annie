@@ -1,6 +1,9 @@
 from annie.extensions import db, BaseMixin
 import shortuuid
+from flask import current_app
 from annie.blueprints.evaluation.model import Grade
+import os
+from sqlalchemy.event import listens_for
 
 
 class UserModel(BaseMixin, db.Model):
@@ -53,7 +56,7 @@ assigned = db.Table(
 class Assignment(BaseMixin, db.Model):
     __tablename__ = "assignments"
     title = db.Column(db.String(40), nullable=False)
-    github = db.Column(db.String(40))
+    github = db.Column(db.String(40), default=None)
     description = db.Column(db.String(80))
     due_date = db.Column(db.DateTime)
     users = db.relationship(
@@ -61,7 +64,11 @@ class Assignment(BaseMixin, db.Model):
         secondary=assigned,
         backref=db.backref("assignments", lazy=True),
     )
-    path = db.Column(db.Unicode(128), default=None)  # None if not static check
+    autograder_path = db.Column(
+        db.Unicode(128), default=None
+    )  # None if not static check
+    student_nb = db.Column(db.Unicode(128), default=None)
+    master_nb = db.Column(db.Unicode(128), default=None)  # None if not static check
     max_submissions = db.Column(db.Integer, default=100)
 
     def __repr__(self):
@@ -94,3 +101,29 @@ class Submission(BaseMixin, db.Model):
     @classmethod
     def get_by_id(cls, id):
         return Submission.query.get(id)
+
+    @classmethod
+    def get_by_filepath(cls, path):
+        return Submission.query.filter(Submission.filepath == path).first()
+
+    @classmethod
+    # Get all submission without a grade or where the grades `manuel_review` is False
+    def get_all_without_grade(cls):
+        return Submission.query.filter((Submission.grade == None)).count()
+
+
+# Delete hooks for models, delete files if models are getting deleted
+@listens_for(Submission, "after_delete")
+def del_file(mapper, connection, target):
+    if target.filepath:
+        try:
+            os.remove(
+                os.path.join(
+                    os.getcwd(),
+                    current_app.config["UPLOAD_FOLDER"],
+                    "submissions",
+                    target.filepath,
+                )
+            )
+        except OSError:
+            pass
