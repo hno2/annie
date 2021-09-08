@@ -30,7 +30,9 @@
 
 {% macro showcase_block(showcases) -%}
 {%if not showcases%}
-Sorry there are no Showcases yet.
+<p class="note note-info">
+    There are no showcases to display.
+  </p>
 {%else%}
 <div class="card-group">
     {% for showcase in showcases %}
@@ -56,9 +58,9 @@ Sorry there are no Showcases yet.
     <div class="card-footer">
         {%for tag in showcase.tags%}
         {% if linked %}
-        <a href="?filtered_by={{tag}}" class="badge rounded-pill bg-secondary">{{tag}}</a>
+        <a href="?filtered_by={{tag}}" class="badge rounded-pill bg-info">{{tag}}</a>
         {% else %}
-        <span class="badge rounded-pill bg-secondary">{{tag}}</span>
+        <span class="badge rounded-pill bg-info">{{tag}}</span>
         {% endif %}
         {%endfor%}
         <div class="btn-wrapper text-center d-flex justify-content-between">
@@ -216,11 +218,16 @@ Sorry there are no Showcases yet.
             <a href="/review/{{submissions[0].filepath}}" class="btn btn-light btn-rounded">View latest submission</a>
             {%endif%}
     </div>
+    
     <div class="card-footer text-muted">
-        <a href="https://colab.research.google.com/github/{{assignment.repository}}" target="_blank"><span class="badge bg-info">
+        {%if assignment.github%}
+        <a href="https://colab.research.google.com/github/{{assignment.github}}" target="_blank"><span class="badge bg-info">
             <i class="fas fa-infinity"></i> Open in Colab</span></a>
-    <a href="https://www.github.com/{{assignment.repository}}" target="_blank"><span class="badge bg-info ms-2 me-5"><i class="fas fa-download fa-lg"></i>
+        {%endif%}
+        {%if assignment.student_nb%}
+    <a href="/download/{{assignment.student_nb}}" target="_blank"><span class="badge bg-info ms-2 me-5"><i class="fas fa-download fa-lg"></i>
             Download</span></a>
+            {%endif%}
 
     </div>
 
