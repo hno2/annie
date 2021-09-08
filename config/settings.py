@@ -33,5 +33,5 @@ CELERY_CONFIG = {
     "include": ["annie.blueprints.evaluation.tasks"],
 }
 ENABLE_SHOWCASE = True
-ENABLE_CLIPPY = True
-ENABLE_GRADER = True
+ENABLE_CLIPPY = False
+ENABLE_GRADER = False
