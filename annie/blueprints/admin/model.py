@@ -1,27 +1,57 @@
-import json
-
 from annie.blueprints.playground.model import Showcase
 from annie.blueprints.user.model import Assignment, Submission, UserModel
 from annie.blueprints.evaluation.model import Comment, Grade
 from annie.extensions import db
-from flask import current_app, redirect
+from flask import current_app
 from flask_admin import Admin, form
 from flask_admin.contrib.sqla import ModelView
 from sqlalchemy.event import listens_for
+from flask_admin import BaseView, expose
 
 
-class FileView(ModelView):
+class ViewMixin(ModelView):
+    column_exclude_list = ("created", "updated")
+    form_excluded_columns = ("created", "updated")
+
+    def _description_formatter(view, context, model, name):
+        print(model)
+        # Format your string here e.g show first 20 characters
+        # can return any valid HTML e.g. a link to another view to show the detail or a popup window
+        return model.description[:20] + "..."
+
+    column_formatters = {
+        "description": _description_formatter,
+    }
+
+
+class FileView(ViewMixin):
     # Override form field to use Flask-Admin FileUploadField
-    form_overrides = {"path": form.FileUploadField}
+    form_overrides = {
+        "autograder_path": form.FileUploadField,
+        "student_nb": form.FileUploadField,
+        "master_nb": form.FileUploadField,
+    }
 
     # Pass additional parameters to 'path' to FileUploadField constructor
     form_args = {
-        "path": {
+        "autograder_path": {
             "label": "Autograder ZIP",
             "base_path": current_app.config["UPLOAD_FOLDER"] + "/assignments/master/",
             "allow_overwrite": True,
             "allowed_extensions": ["zip"],
-        }
+        },
+        "student_nb": {
+            "label": "Student Notebook (ipynb, zip)",
+            "base_path": current_app.config["UPLOAD_FOLDER"] + "/assignments/student/",
+            "allow_overwrite": True,
+            "allowed_extensions": ["zip", "ipynb"],
+        },
+        "master_nb": {
+            "label": "Master Notebook (ipynb, zip)",
+            "base_path": current_app.config["UPLOAD_FOLDER"] + "/assignments/master/",
+            "allow_overwrite": True,
+            "allowed_extensions": ["ipynb"],
+        },
     }
 
 
@@ -33,8 +63,6 @@ class FileView(ModelView):
 #         generate_student_nb(
 #             current_app.config["UPLOAD_FOLDER"] + "/asåsignments/master/" + value
 #         )
-
-from flask_admin import BaseView, expose
 
 
 class MyIndexView(BaseView):
@@ -58,14 +86,21 @@ class MyIndexView(BaseView):
 admin = Admin(
     name="Annie", template_mode="bootstrap4", index_view=MyIndexView(url="/admin")
 )
-admin.add_view(ModelView(UserModel, db.session, name="Users", category="Raw Data"))
+admin.add_view(
+    ViewMixin(
+        UserModel,
+        db.session,
+        name="Users",
+        category="Raw Data",
+    )
+)
 admin.add_view(FileView(Assignment, db.session, name="Assignment", category="Raw Data"))
 admin.add_view(
-    ModelView(Submission, db.session, name="Submissions", category="Raw Data")
+    ViewMixin(Submission, db.session, name="Submissions", category="Raw Data")
 )
-admin.add_view(ModelView(Showcase, db.session, name="Showcases", category="Raw Data"))
-admin.add_view(ModelView(Comment, db.session, name="Comments", category="Raw Data"))
-admin.add_view(ModelView(Grade, db.session, name="Grades", category="Raw Data"))
+admin.add_view(ViewMixin(Showcase, db.session, name="Showcases", category="Raw Data"))
+admin.add_view(ViewMixin(Comment, db.session, name="Comments", category="Raw Data"))
+admin.add_view(ViewMixin(Grade, db.session, name="Grades", category="Raw Data"))
 
 if current_app.config["ENABLE_GRADER"]:
 
