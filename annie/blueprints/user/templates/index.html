@@ -37,7 +37,7 @@
     <section id="assignments">
         <div class="alert alert-dark" role="alert">Use this token for authentication <code id="auth_token">{{user.auth_token}}</code> </div>
         {% if user.assignments %}
-        {%for assignment in user.assignments %}
+        {%for assignment in user.assignments|sort(attribute="due_date") %}
         {{assignment_card(assignment, submissions=user.get_submissions_by_assignment(assignment))}}
         {%endfor%}
         {%else%}
