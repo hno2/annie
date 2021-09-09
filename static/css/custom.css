@@ -573,3 +573,7 @@
 #sidenav a.active {
     background-color: rgba(38, 38, 38, .05)
 }
+
+.highlight {
+    background-color: white !important;
+}
