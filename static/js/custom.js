@@ -17,20 +17,6 @@ $("#sidenav-toggle").on("click", function () {
     }
 })
 
-function align_comments() {
-    /*For every pre (TODO:check is not empty*/
-    $(".CodeMirror").each(function (index) {
-        block = $(this)
-        $("#block-" + index).css({
-            position: "absolute",
-            top: block.position().top
-        })
-    });
-}
-$(document).ready(
-    align_comments()
-)
-
 // Highlight element on hover and copy to clipboard on click
 function hoverandcopy(el) {
     el.hover(function () {
