@@ -30,6 +30,7 @@ class Grade(BaseMixin, db.Model):
 
 
 @listens_for(Grade, "before_insert")
+@listens_for(Grade, "before_update")
 def _update_overall(mapper, connection, target):
     # Update Overall Grader
     all_grades = []
@@ -68,6 +69,7 @@ def strip(s: str):
 
 
 @listens_for(Comment, "before_insert")
+@listens_for(Comment, "before_update")
 def _update_html(mapper, connection, target):
     # Updates the html fields with the markdown
     target.html = bleach.clean(  # Sanitize the comment with bleach
