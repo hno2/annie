@@ -7,6 +7,7 @@ from markdown import markdown
 
 class Grade(BaseMixin, db.Model):
     static = db.Column(db.Integer)
+    auto = db.Column(db.Integer)
     manual = db.Column(db.Integer, default=None)
     ai = db.Column(db.Integer)
     peer = db.Column(db.Integer)
@@ -15,6 +16,7 @@ class Grade(BaseMixin, db.Model):
     )  # Maybe we should add the content of peer Review here.
     submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
     manual_description = db.Column(db.String(255))
+    progress_steps = db.Column(db.String())
 
     def __repr__(self):
         return "<Grade {overall} (AI-{ai}/Static-{static}/Peer-{peer}/Manual-{manual}) for Submission {submission}>".format(
@@ -31,10 +33,12 @@ class Grade(BaseMixin, db.Model):
 def _update_overall(mapper, connection, target):
     # Update Overall Grader
     all_grades = []
-    for grade in [target.ai, target.static, target.peer, target.manual]:
+    for grade in [target.ai, target.static, target.peer, target.manual, target.auto]:
         if grade is not None:
             all_grades.append(grade)
-    target.overall = int(mean(all_grades))
+    if len(all_grades) > 0:
+        # else only a textual field was upgraded and we do not need to calcucate the mean
+        target.overall = int(mean(all_grades))
 
 
 class Comment(BaseMixin, db.Model):
