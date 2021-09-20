@@ -18,14 +18,8 @@ from flask import (
     session,
 )
 
-# from annie.blueprints.evaluation.tasks import get_preds
-from annie.blueprints.evaluation.steve import static_code_check, convert_to_html
-from nbformat.reader import NotJSONError
-from annie.blueprints.playground.model import Tag
-from annie.blueprints.evaluation.model import Comment
-from annie.blueprints.user.model import Submission, UserModel
-from annie.common import user_or_dummy
 
+from nbformat.reader import NotJSONError
 
 evaluation = Blueprint("evaluation", __name__, template_folder="templates")
 
@@ -40,7 +34,7 @@ def home(filepath):
     except FileNotFoundError:
         return "File not found", 404
     file_data = {}
-    # Get submission Id based on submission filepath
+    # Get submission based on submission filepath
     submission = Submission.query.filter_by(filepath=filepath).first()
     try:
         file_data["html"] = convert_to_html(
