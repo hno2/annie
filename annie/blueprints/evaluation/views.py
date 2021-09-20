@@ -56,15 +56,6 @@ def home(filepath):
     )
 
 
-def strip(s: str):
-    """strips outer html tags"""
-
-    start = s.find(">") + 1
-    end = len(s) - s[::-1].find("<") - 1
-
-    return s[start:end]
-
-
 @evaluation.post("/addComment")
 def add_comment() -> str:
     """Creates a comment for a submission and a given cell_id, returns html of the comment
@@ -73,23 +64,15 @@ def add_comment() -> str:
         [str]: A templated HTML string of the comment
     """
     if "markdown" in request.form:
-        html = bleach.clean(  # Sanitize the comment
-            strip(
-                markdown.markdown(
-                    request.form["markdown"],
-                )
-            )
-        )
         if "file" in request.form:
             comment = Comment(
                 markdown=request.form["markdown"],
-                html=html,
                 submission_id=Submission.query.filter(
                     Submission.filepath.contains(request.form["file"])
                 )
                 .first()
                 .id,
-                cell_id=request.form["cell_id"],
+                cell_id=request.form["cell_id"] if "cell_id" in request.form else None,
                 user=UserModel.get_by_token(session["token"]),
             )
             # If not cell_id this is a general comment
@@ -99,5 +82,5 @@ def add_comment() -> str:
     else:
         return "Missing markdown", 400
 
-    comment_maker = get_template_attribute("_macros.html", "comment")
+    comment_maker = get_template_attribute("_macros.html", "comment_block")
     return comment_maker(comment)

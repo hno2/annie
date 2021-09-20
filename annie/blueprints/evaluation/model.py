@@ -1,6 +1,8 @@
 from annie.extensions import db, BaseMixin
 from sqlalchemy.event import listens_for
 from statistics import mean
+import bleach
+from markdown import markdown
 
 
 class Grade(BaseMixin, db.Model):
@@ -47,3 +49,24 @@ class Comment(BaseMixin, db.Model):
         return "<Comment {markdown}>".format(
             markdown=self.markdown,
         )
+
+
+def strip(s: str):
+    """strips outer html tags"""
+
+    start = s.find(">") + 1
+    end = len(s) - s[::-1].find("<") - 1
+
+    return s[start:end]
+
+
+@listens_for(Comment, "before_insert")
+def _update_html(mapper, connection, target):
+    # Updates the html fields with the markdown
+    target.html = bleach.clean(  # Sanitize the comment with bleach
+        strip(  # Markdown introduces extra html tags we need to strip
+            markdown(
+                target.markdown,
+            )
+        )
+    )
