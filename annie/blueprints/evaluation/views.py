@@ -1,13 +1,22 @@
+from config.settings import ENABLE_PROCESS_PREDICTIONS
+from annie.blueprints.evaluation.model import Comment, Grade
+from annie.blueprints.evaluation.steve import convert_to_html, static_code_check
+
+if ENABLE_PROCESS_PREDICTIONS:
+    from annie.blueprints.evaluation.tasks import (
+        get_preds,
+    )  # Load time can be long as pytorch et al are loaded
+from annie.blueprints.playground.model import Tag
+from annie.blueprints.user.model import Submission, UserModel
+from annie.common import user_or_dummy
 from flask import (
     Blueprint,
-    render_template,
     current_app,
-    request,
     get_template_attribute,
+    render_template,
+    request,
     session,
 )
-import markdown
-import bleach
 
 # from annie.blueprints.evaluation.tasks import get_preds
 from annie.blueprints.evaluation.steve import static_code_check, convert_to_html
