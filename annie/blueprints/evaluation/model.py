@@ -40,7 +40,10 @@ def _update_overall(mapper, connection, target):
 class Comment(BaseMixin, db.Model):
     markdown = db.Column(db.String(500))
     html = db.Column(db.String(500))
-    submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
+    submission_id = db.Column(
+        db.Integer, db.ForeignKey("submissions.id"), nullable=False
+    )
+    submission = db.relationship("Submission", backref="comments")
     user = db.relationship("UserModel", backref="comments")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     cell_id = db.Column(db.String(80))
