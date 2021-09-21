@@ -71,7 +71,7 @@
     </div>
 
     <div class="collapse mt-3" id="upload-{{assignment.title|replace(' ' ,'')}}" will-change="transform">
-      {{ dropzone.create(id=assignment.title, action="/upload/"+assignment.title) }}
+      {{ dropzone.create(id=assignment.title|replace(' ',''), action="/upload/"+assignment.title) }}
     </div>
 </div>
 </section>
@@ -84,5 +84,5 @@
 
 {% block custom_js %}
 {{ dropzone.load_js() }}
-{{ dropzone.config(redirect_url=url_for(request.endpoint, assignment=assignment)) }}
+{{ dropzone.config(id=assignment.title|replace(' ',''), redirect_url=url_for(request.endpoint, assignment=assignment.title)) }}
 {%endblock%}
