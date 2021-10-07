@@ -5,8 +5,8 @@
 <main class="mt-5">
   <div class="container">
     <section id="welcome">
-
       {% if config["ENABLE_SHOWCASE"] and not submission.showcase and not submission.assignment.path%}
+
       <button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#showcase-modal">
         Ready to show it to others?
       </button>
@@ -20,29 +20,30 @@
             {{file.html|safe}}
           </div>
         </div>
+
         {%if submission.showcase%}
         <div class="col-md-4">
           {{showcase_identity(submission.showcase, linked=false, comments=comments)}}
         </div>
         {%endif%}
         {%if file.process%}
-        <div class="col-md-3">
+        <div class="offset-md-8 col-md-2">
           {%set index_labels=["Algorithm_Selection","Conclusio","Data_Adaption","Data_Understanding","Hyperparameter_Adjustment","None"]%}
+          
           {%for labels in file.process%}
-          <div class="process-step" id="block-{{loop.index0}}">
-            <div class="card">
-              <div class="card-body">
-                {%for label in labels[0][0]%}
-                {%set conf=labels[2][0][index_labels.index(label)]|float|round(2)%}
-                <p class="card-text">{{label}} - <span class="badge {{'bg-success' if conf > 0.5 else 'bg-warning text-dark'}}">{{conf}}
-                  </span></p> {%endfor%}
-              </div>
-            </div>
+          <div class="process-step d-none" id="block-{{loop.index0}}">
+            {%for label in labels[0][0]%}
+            {%set conf=labels[2][0][index_labels.index(label)]|float%}
+            <span class="badge bg-info">
+              {{label|replace("_"," ")}} <a href="#" role="button"><i class="fas fa-check text-dark ms-1"></i></a> <a href="#" role="button"><i class="fas fa-times text-dark me-1"></i></a></span><span class="badge badge-rounded-pill badge-notification {{'bg-success' if conf > 0.5 else 'bg-warning text-dark'}}" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Accuracy of this prediction">{{conf}}
+            </span> </br>
+            {%endfor%}
           </div>
           {%endfor %}
-        </div>
-        {%endif%}
-      </div>
+          </div>
+          {%endif%}
+
+
 
     </section>
     {%if file.grade%}

@@ -34,13 +34,13 @@ $(".post").click(function () {
 
 
 function align_comments() {
-    /*For every pre (TODO:check is not empty*/
     $(".code_cell").each(function (index) {
         block = $(this)
         $("#block-" + index).css({
             position: "absolute",
             top: block.position().top
-        })
+        });
+        $("#block-" + index).removeClass("d-none")
     });
 }
 $(document).ready(
