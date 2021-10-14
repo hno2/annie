@@ -7,6 +7,8 @@ ADD ./requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 ADD ./no-deps.txt ./no-deps.txt
 RUN pip install --no-deps -r no-deps.txt 
+ADD ./optional.txt ./optional.txt
+RUN pip install -r optional.txt 
 ENV FLASK_ENV="production" \
     FLASK_APP="annie.app"
 COPY . /app
