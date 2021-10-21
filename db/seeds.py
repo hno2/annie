@@ -13,15 +13,17 @@ from annie.blueprints.clippy.model import Chat, Message
 
 itw = Assignment(
     title="Into the wild",
-    description="Bei Into the Wild, darfst du deine eigene Fragestellung bearbeiten. Ob die Analyse von Tweets, Sprach- oder Texterkennung oder Bilderkennung, was kannst du in vier Wochen schaffen?",
+    description="You are on your own now! In the Into the Wild, you get to work on your own question. Whether it's analyzing tweets, recognizing speech or working with images, show us what can you accomplish in four weeks!",
     github="/hno2/example_assignment/blob/main/example.ipynb",
     due_date=datetime.today() + timedelta(days=21),
+    showcaseable=True,
 )
 pd = Assignment(
-    title="Pandas retten den Tag",
-    description="Pandas sind tolle Tiere und die Standart Python Bibliothek für Tabellendaten.",
+    title="Pandas save the Day",
+    description="In this assignment we will deal with data and different data types. The focus is on the best known form, the CSV format, whose properties and special features will be examined in detail.  Afterwards we will show you how to import data with the help of the Pandas Library. This simplifies the import of data enormously - so Pandas save the day. ",
     github="/hno2/example_assignment/blob/main/example.ipynb",
     master_nb="Task 1 - Data Preparation.ipynb",
+    student_nb="Task 1 - Data Preparation_Empty.ipynb",
     due_date=datetime.today() + timedelta(days=14),
 )
 itw.save()

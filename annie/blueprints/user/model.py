@@ -67,6 +67,7 @@ class Assignment(BaseMixin, db.Model):
     autograder_path = db.Column(
         db.Unicode(128), default=None
     )  # None if not static check
+    showcaseable = db.Column(db.Boolean, default=False)
     student_nb = db.Column(db.Unicode(128), default=None)
     master_nb = db.Column(db.Unicode(128), default=None)  # None if not static check
     max_submissions = db.Column(db.Integer, default=100)
@@ -107,7 +108,7 @@ class Submission(BaseMixin, db.Model):
         return Submission.query.filter(Submission.filepath == path).first()
 
     @classmethod
-    # Get all submission without a grade or where the grades `manuel_review` is False
+    # Get all submission without a grade
     def get_all_without_grade(cls):
         return Submission.query.filter((Submission.grade == None)).count()
 
