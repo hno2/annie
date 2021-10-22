@@ -183,7 +183,11 @@
         <td>{{submission.filepath.split(".")[0][0:5]}}</td>
         <td>{{submission.assignment.title}}</td>
         <td><time datetime="{{submission.created}}">{{submission.created|timeago}} </time></td>
-        <td>{{submission.grade.overall}} {{grade_dot(submission.grade)}}</i></td>
+        <td>{%if submission.grade.overall is not none%}
+            {{submission.grade.overall}} {{grade_dot(submission.grade)}}
+            {%else%}
+            In Progress
+            {%endif%}</i></td>
         <td><a href="/review/{{submission.filepath}}" type="button" class="btn btn-light btn-rounded">View</button></td>
         {%if showcase%}
         <td> {%if submission.showcase%}
@@ -222,6 +226,7 @@
             {%endif%}
     </div>
     
+    {%if  assignment.github or assignment.student_nb %}
     <div class="card-footer text-muted">
         {%if assignment.github%}
         <a href="https://colab.research.google.com/github/{{assignment.github}}" target="_blank"><span class="badge bg-info">
@@ -233,6 +238,7 @@
             {%endif%}
 
     </div>
+    {%endif%}
 
 </div>
 <br>
