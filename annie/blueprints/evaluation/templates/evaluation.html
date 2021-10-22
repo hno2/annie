@@ -27,12 +27,11 @@
         {%endif%}
         {%if file.process%}
         <div class="offset-md-8 col-md-2">
-          {%set index_labels=["Algorithm_Selection","Conclusio","Data_Adaption","Data_Understanding","Hyperparameter_Adjustment","None"]%}
           
           {%for labels in file.process%}
           <div class="process-step d-none" id="block-{{loop.index0}}">
             {%for label in labels[0][0]%}
-            {%set conf=labels[2][0][index_labels.index(label)]|float%}
+            {%set conf=labels[2][0][loop.index0]|float%}
             <span class="badge bg-info">
               {{label|replace("_"," ")}} <a href="#" role="button"><i class="fas fa-check text-dark ms-1"></i></a> <a href="#" role="button"><i class="fas fa-times text-dark me-1"></i></a></span><span class="badge badge-rounded-pill badge-notification {{'bg-success' if conf > 0.5 else 'bg-warning text-dark'}}" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Accuracy of this prediction">{{conf}}
             </span> </br>
