@@ -16,7 +16,7 @@ class Grade(BaseMixin, db.Model):
     )  # Maybe we should add the content of peer Review here.
     submission_id = db.Column(db.Integer, db.ForeignKey("submissions.id"))
     manual_description = db.Column(db.String(255))
-    progress_steps = db.Column(db.String())
+    process_steps = db.Column(db.String())
 
     def __repr__(self):
         return "<Grade {overall} (AI-{ai}/Static-{static}/Peer-{peer}/Manual-{manual}) for Submission {submission}>".format(

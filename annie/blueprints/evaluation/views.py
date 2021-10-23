@@ -39,12 +39,25 @@ def home(filepath):
     try:
         file_data["html"] = convert_to_html(
             content,
-            Comment.query.filter(Comment.submission_id == submission.id).all()
+            comments=Comment.query.filter(Comment.submission_id == submission.id).all()
             if not submission.showcase
             else False,  # Show overall comments only if submission is not a showcase
         )
     except NotJSONError:
         return "Something went wrong while formatting"
+    # TODO: Check if assignment wants model predictions
+    if "process_steps" in submission.grade.__dict__:
+        print(submission.grade.process_steps)
+        if submission.grade.process_steps != None:
+            file_data["process"] = eval(submission.grade.process_steps)  # get from db
+    elif (  # TODO: Move this to a celery task
+        not submission.grade
+        or not submission.grade.process_steps
+        and ENABLE_PROCESS_PREDICTIONS
+    ):  # if no pogress steps predicted yet, predict them
+        file_data["process"] = get_preds(content)
+        submission.grade = Grade(process_steps=str(file_data["process"]))
+        submission.save()
 
     if filepath.split(".")[1] == "py":  # If Pyfile uploaded
         score, msgs = static_code_check(filepath)
